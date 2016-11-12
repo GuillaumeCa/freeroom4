@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import classnames from 'classnames';
 
-import { RoomsList } from '../RoomsList/RoomsList';
+import RoomsList from '../RoomsList/RoomsList';
 
 import './Building.css';
 

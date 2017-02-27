@@ -1,0 +1,15 @@
+.Header-title {
+  margin: 0;
+  font-weight: 300;
+  letter-spacing: 3px;
+  font-size: 50px;
+  color: #5CA7FD;
+}
+
+.Header-subtitle {
+  margin: 0;
+  letter-spacing: 1px;
+  font-weight: 300;
+  font-size: 15px;
+  color: #A8A8A8;
+}

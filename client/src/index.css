@@ -1,0 +1,56 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.primary-color {
+  color: #5CA7FD;
+}
+
+.secondary-color {
+  color: #A8A8A8;
+}
+
+.highlight {
+  color: #ffc609;
+}
+
+.bg-primary {
+  background: #5CA7FD;
+  color: white;
+}
+
+.bg-secondary {
+  background: #A8A8A8;
+  color: white;
+}
+
+.link {
+  display: inline-block;
+  color: #A8A8A8;
+  letter-spacing: 2px;
+  font-weight: 300;
+  font-size: 13px;
+  margin: 5px 0;
+  text-transform: uppercase;
+}
+
+.link:hover {
+  color: #ffc609;
+}
+
+.text {
+  letter-spacing: 1px;
+  font-weight: 300;
+  font-size: 12px;
+}

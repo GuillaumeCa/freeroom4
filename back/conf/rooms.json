@@ -1,0 +1,26 @@
+{
+  "NDC": {
+    "N16A": {
+      "floor": 1,
+      "urlId": "9D899E90DE9E91D6C5CAB361058F32B4"
+    },
+    "N16B": {
+      "floor": 1,
+      "urlId": "D986F82B93EECC39F1ABC2FDEC343C23"
+    },
+    "N18": {
+      "floor": 1,
+      "urlId": "ABEAEC630D506AF7DD9862AB5EE5C906"
+    },
+    "N28": {
+      "floor": 2,
+      "urlId": "7165D289E35F56674B4D8E412312EDD0"
+    }
+  },
+  "NDL": {
+    "L012": {
+      "floor": 0,
+      "urlId": "0B288A81494FBC4802C5EEA48257B425"
+    }
+  }
+}

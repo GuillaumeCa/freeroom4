@@ -41,7 +41,8 @@ function RoomTime(props) {
   const getTime = function (timestamp) {
     return new Date(timestamp).toLocaleTimeString()
   }
-  return <div>{props.title} - {getTime(props.start)} - {getTime(props.end)}</div>
+  //return <div>{props.title} - {getTime(props.start)} - {getTime(props.end)}</div>
+  return <div className="Room-status"></div>
 }
 
 function Room(props) {

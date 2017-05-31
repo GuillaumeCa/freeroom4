@@ -1,2 +1,5 @@
 # Freeroom 4
-New version of freeroom built with state of the art features using React. Backend incoming.
+
+New version of freeroom built using state of the art technologies such as React 🎉 ⭐
+- Frontend written with React and Redux.
+- Backend written with Go.

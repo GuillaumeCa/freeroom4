@@ -1,40 +1,44 @@
 package main
 
-import "time"
-
-type building struct {
-	Rooms []room `json:"rooms"`
+// Building défini un batiment et ses salles
+type Building struct {
+	Rooms []Room `json:"rooms"`
 }
 
-type room struct {
+// Room défini une salle et ses évènements
+type Room struct {
 	ID       string  `json:"id"`
 	Building string  `json:"building"`
 	Floor    int     `json:"floor"`
-	Events   []event `json:"events"`
+	Events   []Event `json:"events"`
 }
 
-type event struct {
+// Event -
+type Event struct {
 	Name        string       `json:"name"`
 	Location    string       `json:"location"`
 	Description string       `json:"desc"`
-	Time        timeDuration `json:"time"`
+	Time        TimeDuration `json:"time"`
 }
 
-type eventList []event
+// EventList est une liste d'Event
+type EventList []Event
 
-func (slice eventList) Len() int {
+func (slice EventList) Len() int {
 	return len(slice)
 }
 
-func (slice eventList) Less(i, j int) bool {
-	return slice[i].Time.Start.Before(slice[j].Time.Start)
+func (slice EventList) Less(i, j int) bool {
+	return slice[i].Time.Start < slice[j].Time.Start
 }
 
-func (slice eventList) Swap(i, j int) {
+func (slice EventList) Swap(i, j int) {
 	slice[i], slice[j] = slice[j], slice[i]
 }
 
-type timeDuration struct {
-	Start time.Time `json:"start"`
-	End   time.Time `json:"end"`
+// TimeDuration défini la durée d'un évènement
+// avec une date début et de fin
+type TimeDuration struct {
+	Start int64 `json:"start"`
+	End   int64 `json:"end"`
 }

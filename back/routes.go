@@ -12,15 +12,8 @@ func (a *App) getBuildingHandler(w http.ResponseWriter, r *http.Request) {
 	resOK(w, res)
 }
 
-func (a *App) testHandler(w http.ResponseWriter, r *http.Request) {
-	ro, err := a.createRoom("N16B", buildNDC)
-	if err != nil {
-		resError(w, http.StatusInternalServerError, "Room cannot be created: "+err.Error())
-		return
-	}
-	resOK(w, ro)
-}
-
 func (a *App) testGetCalHandler(w http.ResponseWriter, r *http.Request) {
-	a.updateCalendars()
+	c := readRoomConf()
+	a.updateCalendars(c, buildNDC)
+	a.updateCalendars(c, buildNDL)
 }

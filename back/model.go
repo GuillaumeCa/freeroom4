@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"sort"
 	"time"
 
@@ -13,21 +12,21 @@ const (
 	buildNDL = "NDL"
 )
 
-func (a *App) createRoom(id, building string) (*room, error) {
+func (a *App) addRoom(id, building string) (Room, error) {
 	c := a.DB.C("rooms")
 	floor := getRoomFloor(building, id)
-	r := &room{
+	r := &Room{
 		ID:       id,
 		Building: building,
 		Floor:    floor,
-		Events:   []event{},
+		Events:   []Event{},
 	}
 	s := bson.M{"id": id}
 	_, err := c.Upsert(s, r)
-	return r, err
+	return *r, err
 }
 
-func (a *App) addEvent(roomID string, e []event) {
+func (a *App) addEvent(roomID string, e []Event) {
 	c := a.DB.C("rooms")
 	c.Upsert(bson.M{"id": roomID}, bson.M{"$push": bson.M{
 		"events": bson.M{
@@ -37,34 +36,32 @@ func (a *App) addEvent(roomID string, e []event) {
 	})
 }
 
-func (a *App) getBuilding(id string) (building, error) {
+func (a *App) getBuilding(id string) (Building, error) {
 	c := a.DB.C("rooms")
-	var rooms = []room{}
-	err := c.Find(bson.M{"building": id}).All(&rooms)
-	return building{rooms}, err
+	var rooms = []Room{}
+	err := c.Find(bson.M{"building": id}).Sort("floor", "id").All(&rooms)
+	return Building{rooms}, err
 }
 
-func (a *App) updateCalendars() {
-	conf := readRoomConf()
-	for rid, r := range conf[buildNDC] {
-		events := getEvents(buildNDC, rid, r.URLID)
-		a.createRoom(rid, buildNDC)
-		eventsToAdd := eventList{}
+func (a *App) updateCalendars(conf roomConfObj, b string) {
+	for rid, r := range conf[b] {
+		events := getEvents(b, rid, r.URLID)
+		a.addRoom(rid, b)
+		eventsToAdd := EventList{}
 		for _, e := range events {
-			checkTime := e.Start.Before(time.Now().AddDate(0, 0, 3)) && e.Start.After(time.Now())
+			checkTime := e.Start.Before(time.Now().Truncate(24*time.Hour).AddDate(0, 0, 7)) && e.Start.After(time.Now())
 			if e.Summary != "Férié" && checkTime {
-				ev := event{
+				ev := Event{
 					Name:        e.Summary,
 					Description: e.Description,
 					Location:    e.Location,
-					Time:        timeDuration{*e.Start, *e.End},
+					Time:        TimeDuration{e.Start.Unix(), e.End.Unix()},
 				}
 				eventsToAdd = append(eventsToAdd, ev)
 			}
 		}
 		sort.Sort(eventsToAdd)
-		fmt.Println(eventsToAdd)
 		a.addEvent(rid, eventsToAdd)
-		println("got " + rid)
+		println("updating " + rid + " done")
 	}
 }

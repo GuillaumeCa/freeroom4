@@ -4,7 +4,7 @@ package main
 import (
 	"os"
 
-	"github.com/GuillaumeCa/freeroom4/back/app"
+	"github.com/GuillaumeCa/freeroom4/api/app"
 )
 
 func main() {

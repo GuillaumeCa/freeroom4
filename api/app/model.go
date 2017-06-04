@@ -81,7 +81,7 @@ func (a *App) updateCalendars(conf roomConfObj, b string) {
 					Name:        e.Summary,
 					Description: e.Description,
 					Location:    e.Location,
-					Time:        TimeDuration{e.Start.UnixNano(), *e.Start, e.End.UnixNano()},
+					Time:        TimeDuration{e.Start.Unix() * 1000, *e.Start, e.End.Unix() * 1000},
 				}
 				eventsToAdd = append(eventsToAdd, ev)
 			}

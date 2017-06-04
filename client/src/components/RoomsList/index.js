@@ -11,7 +11,7 @@ const FREE_FOR = 'FREE_FOR';
 
 function RoomTime({ time }) {
   const now = new Date();
-  const diff = time * 1000 - now.getTime();
+  const diff = time - now.getTime();
   let timeF = moment(diff).format('H[h]mm')
   if (diff / (1000 * 60 * 60) < 1) {
     timeF = moment(diff).format('m [min]')
@@ -49,16 +49,16 @@ class RoomEvents extends Component {
 
   getNextEvents(events) {
     const now = new Date();
-    return events.filter(e => e.time.start * 1000 > now.getTime());
+    return events.filter(e => e.time.start > now.getTime());
   }
 
   formatDate(date) {
-    return moment(date * 1000).format('H:mm');
+    return moment(date).format('H:mm');
   }
 
   onNextEvent = () => {
     const { eventIndex, nextEvents } = this.state;
-    if (nextEvents.length < eventIndex) return;
+    if (nextEvents.length === eventIndex + 1) return;
     this.setState({ eventIndex: this.state.eventIndex + 1 });
   }
 
@@ -118,9 +118,9 @@ class Room extends Component {
   computeStatus(events) {
     const now = new Date();
     const filtered = events.sort((a, b) => a.time.start > b.time.start)
-                   .filter(e => (new Date(e.time.start * 1000)).getDate() === now.getDate())
+                   .filter(e => (new Date(e.time.start)).getDate() === now.getDate())
     for (let e of filtered) {
-      const start = e.time.start * 1000;
+      const start = e.time.start;
       if (start > now.getTime()) {
         return { status: FREE_FOR, currentEvent: e };
       }

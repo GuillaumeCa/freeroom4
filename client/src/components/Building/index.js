@@ -100,7 +100,7 @@ class BSwitcher extends Component {
     rooms.forEach(r => {
       let isFree = true;
       r.events.forEach(e => {
-        if (now > e.time.start * 1000 && now < e.time.end * 1000) {
+        if (now > e.time.start && now < e.time.end) {
           isFree = false;
           notFree.push(r);
         }

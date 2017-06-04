@@ -1,9 +1,14 @@
+// This is the API of Freeroom (v4)
 package main
 
-import "os"
+import (
+	"os"
+
+	"github.com/GuillaumeCa/freeroom4/back/app"
+)
 
 func main() {
-	a := App{}
+	a := app.App{}
 	a.Initialize(
 		// getEnv("DB_USERNAME", "root"),
 		// getEnv("DB_PASSWORD", ""),

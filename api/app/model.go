@@ -1,4 +1,4 @@
-package main
+package app
 
 import (
 	"sort"
@@ -43,11 +43,37 @@ func (a *App) getBuilding(id string) (Building, error) {
 	return Building{rooms}, err
 }
 
+// Donne le nombre total de salles d'un batiment
+// ainsi que le nombre de salles disponibles
+func (a *App) getBuildingInfos(id string) (BuildingInfo, error) {
+	c := a.DB.C("rooms")
+	var bInfos BuildingInfo
+	var rooms []Room
+	err := c.Find(bson.M{"building": id}).All(&rooms)
+
+	tmstp := time.Now().Unix()
+	notDisp := 0
+	for _, room := range rooms {
+		for _, event := range room.Events {
+			if tmstp > event.Time.Start && tmstp < event.Time.End {
+				notDisp++
+			}
+		}
+	}
+
+	bInfos = BuildingInfo{
+		TotalRooms: len(rooms),
+		FreeRooms:  len(rooms) - notDisp,
+	}
+
+	return bInfos, err
+}
+
 func (a *App) updateCalendars(conf roomConfObj, b string) {
 	for rid, r := range conf[b] {
 		events := getEvents(b, rid, r.URLID)
 		a.addRoom(rid, b)
-		eventsToAdd := EventList{}
+		eventsToAdd := []Event{}
 		for _, e := range events {
 			checkTime := e.Start.Before(time.Now().Truncate(24*time.Hour).AddDate(0, 0, 7)) && e.Start.After(time.Now())
 			if e.Summary != "Férié" && checkTime {
@@ -55,12 +81,14 @@ func (a *App) updateCalendars(conf roomConfObj, b string) {
 					Name:        e.Summary,
 					Description: e.Description,
 					Location:    e.Location,
-					Time:        TimeDuration{e.Start.Unix(), e.End.Unix()},
+					Time:        TimeDuration{e.Start.UnixNano(), *e.Start, e.End.UnixNano()},
 				}
 				eventsToAdd = append(eventsToAdd, ev)
 			}
 		}
-		sort.Sort(eventsToAdd)
+		sort.Slice(eventsToAdd, func(i, j int) bool {
+			return eventsToAdd[i].Time.Start > eventsToAdd[j].Time.Start
+		})
 		a.addEvent(rid, eventsToAdd)
 		println("updating " + rid + " done")
 	}

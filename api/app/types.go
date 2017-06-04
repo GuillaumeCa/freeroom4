@@ -1,4 +1,6 @@
-package main
+package app
+
+import "time"
 
 // Building défini un batiment et ses salles
 type Building struct {
@@ -21,24 +23,16 @@ type Event struct {
 	Time        TimeDuration `json:"time"`
 }
 
-// EventList est une liste d'Event
-type EventList []Event
-
-func (slice EventList) Len() int {
-	return len(slice)
-}
-
-func (slice EventList) Less(i, j int) bool {
-	return slice[i].Time.Start < slice[j].Time.Start
-}
-
-func (slice EventList) Swap(i, j int) {
-	slice[i], slice[j] = slice[j], slice[i]
-}
-
 // TimeDuration défini la durée d'un évènement
 // avec une date début et de fin
 type TimeDuration struct {
-	Start int64 `json:"start"`
-	End   int64 `json:"end"`
+	Start     int64     `json:"start"`
+	StartDate time.Time `json:"startDate"`
+	End       int64     `json:"end"`
+}
+
+// BuildingInfo -
+type BuildingInfo struct {
+	TotalRooms int `json:"totalRooms"`
+	FreeRooms  int `json:"freeRooms"`
 }

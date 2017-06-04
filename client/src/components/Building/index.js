@@ -161,9 +161,12 @@ class BSwitcher extends Component {
             freeRooms={free}
             notFree={notFree}
           />
-          <div className="Map">
-            Map coming back Soon :)
-          </div>
+          {
+            selected != null &&
+            <div className="Map">
+              Map coming back Soon :)
+            </div>
+          }
         </div>
       </div>
     )

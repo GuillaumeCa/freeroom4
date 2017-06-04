@@ -64,8 +64,8 @@
 }
 
 .BItem-buildingName {
-  font-weight: 300;
-  font-size: 25px;
+  font-weight: 500;
+  font-size: 20px;
   letter-spacing: 1px;
   position: absolute;
   bottom: 0;
@@ -103,8 +103,30 @@
   margin-top: 50px;
 }
 
+.content {
+  display: flex;
+  flex-direction: row;
+}
+
+.Map {
+  display: flex;
+  margin: 50px;
+  margin-right: 0;
+  width: 60%;
+  background: #f3f3f3;
+  align-items: center;
+  border-radius: 5px;
+  justify-content: center;
+  min-height: 300px;
+}
+
 
 @media (max-width: 700px) {
+
+  .Map {
+    display: none;
+  }
+
   .BItem-wrapper:first-child {
     margin-right: 0;
   }

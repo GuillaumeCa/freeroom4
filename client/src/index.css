@@ -2,6 +2,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 * {
@@ -22,7 +23,7 @@ a {
 }
 
 .highlight {
-  color: #ffc609;
+  color: #fca700;
 }
 
 .bg-primary {

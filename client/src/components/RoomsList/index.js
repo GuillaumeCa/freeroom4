@@ -3,6 +3,7 @@ import './RoomsList.css';
 import { SALLES_NDC } from '../../config';
 
 import moment from 'moment';
+import 'moment/locale/fr';
 moment.locale('fr')
 
 const FREE = 'FREE';
@@ -52,7 +53,10 @@ class RoomEvents extends Component {
     return events.filter(e => e.time.start > now.getTime());
   }
 
-  formatDate(date) {
+  formatDate(date, withDate) {
+    if (withDate && (new Date()).getDate() != (new Date(date)).getDate()) {
+      return moment(date).format('D MMMM H:mm');
+    }
     return moment(date).format('H:mm');
   }
 
@@ -76,7 +80,7 @@ class RoomEvents extends Component {
         <h3 className="event-title primary-color">{name}</h3>
         <p className="event-desc secondary-color" dangerouslySetInnerHTML={{ __html: descF }}></p>
         <span>{location}</span>
-        <span>{this.formatDate(time.start)}&nbsp;-&nbsp;{this.formatDate(time.end)}</span>
+        <span>{this.formatDate(time.start, true)}&nbsp;-&nbsp;{this.formatDate(time.end)}</span>
       </div>
     )
   }

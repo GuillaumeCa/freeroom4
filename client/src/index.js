@@ -7,6 +7,10 @@ import store from './store';
 import App from './components/App';
 import './index.css';
 
+import moment from 'moment';
+import 'moment/locale/fr';
+moment.locale('fr')
+
 ReactDOM.render(
   <Provider store={store}>
     <App />

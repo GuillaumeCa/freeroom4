@@ -1,7 +1,6 @@
 package app
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -29,7 +28,7 @@ func (a *App) Initialize(dbname string) {
 	}
 	a.DB = session.DB(dbname)
 
-	a.N = negroni.Classic()
+	a.N = negroni.New()
 	a.Use(setupCors)
 
 	a.Router = mux.NewRouter()
@@ -42,7 +41,7 @@ func (a *App) Initialize(dbname string) {
 
 // Run -
 func (a *App) Run(addr string) {
-	fmt.Printf("Server started at %s...\n", addr)
+	log.Printf("Server started at %s...\n", addr)
 	log.Fatal(http.ListenAndServe(addr, a.N))
 }
 

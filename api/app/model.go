@@ -1,6 +1,7 @@
 package app
 
 import (
+	"log"
 	"sort"
 	"time"
 
@@ -90,6 +91,6 @@ func (a *App) updateCalendars(conf roomConfObj, b string) {
 			return eventsToAdd[i].Time.Start > eventsToAdd[j].Time.Start
 		})
 		a.addEvent(rid, eventsToAdd)
-		println("updating " + rid + " done")
+		log.Printf("updating %s done", rid)
 	}
 }

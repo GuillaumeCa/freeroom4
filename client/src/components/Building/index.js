@@ -14,8 +14,6 @@ class BItem extends Component {
     // this.props.roomInfos(this.props.name);
   }
 
-
-
   render() {
 
     const {
@@ -162,7 +160,7 @@ class BSwitcher extends Component {
             notFree={notFree}
           />
           {
-            selected != null &&
+            selected &&
             <div className="Map">
               Map coming back Soon :)
             </div>

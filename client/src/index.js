@@ -11,6 +11,8 @@ import moment from 'moment';
 import 'moment/locale/fr';
 moment.locale('fr')
 
+console.log('api-url', process.env.API_URL);
+
 ReactDOM.render(
   <Provider store={store}>
     <App />

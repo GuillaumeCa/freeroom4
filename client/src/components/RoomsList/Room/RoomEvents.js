@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 
+import LargeBtn from '../../Button/Large';
+
 export default class RoomEvents extends Component {
 
   state = {
@@ -54,9 +56,17 @@ export default class RoomEvents extends Component {
     const { nextEvents, eventIndex } = this.state;
     return (
       <div className="RoomEvents">
-        { nextEvents.length > 0 && this.renderEvent(nextEvents[eventIndex])}
-        <button onClick={this.onPreviousEvent}>previous</button>
-        <button onClick={this.onNextEvent}>next</button>
+        {
+          nextEvents.length > 0 ?
+          this.renderEvent(nextEvents[eventIndex]) : <div>Pas d'évènement à venir</div>
+        }
+        {
+          nextEvents.length > 0 &&
+          <div>
+            <LargeBtn label="Précédent" onClick={this.onPreviousEvent}/>
+            <LargeBtn label="Suivant" onClick={this.onNextEvent}/>
+          </div>
+        }
       </div>
     )
   }

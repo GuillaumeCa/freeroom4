@@ -20,7 +20,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "build:pi": "API_URL=http://free-room-isep.ddns.net react-scripts build",
+    "build:pi": "API_URL=http://free-room-isep.ddns.net/api react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }

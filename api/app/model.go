@@ -1,21 +1,69 @@
 package app
 
 import (
-	"log"
-	"sort"
 	"time"
 
+	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
-const (
-	buildNDC = "NDC"
-	buildNDL = "NDL"
-)
+// Building défini un batiment et ses salles
+type Building struct {
+	Rooms []Room `json:"rooms"`
+}
 
-func (a *App) addRoom(id, building string) (Room, error) {
-	c := a.DB.C("rooms")
-	floor := getRoomFloor(building, id)
+// Room défini une salle et ses évènements
+type Room struct {
+	ID       string  `json:"id"`
+	Building string  `json:"building"`
+	Floor    int     `json:"floor"`
+	Events   []Event `json:"events"`
+}
+
+// Event -
+type Event struct {
+	Name        string       `json:"name"`
+	Location    string       `json:"location"`
+	Description string       `json:"desc"`
+	Time        TimeDuration `json:"time"`
+}
+
+// TimeDuration défini la durée d'un évènement
+// avec une date début et de fin
+type TimeDuration struct {
+	Start     int64     `json:"start"`
+	StartDate time.Time `json:"startDate"`
+	End       int64     `json:"end"`
+}
+
+// BuildingInfo -
+type BuildingInfo struct {
+	TotalRooms int `json:"totalRooms"`
+	FreeRooms  int `json:"freeRooms"`
+}
+
+// Model -
+type Model interface {
+	insertRoom(id, building string) error
+	addRoomEvents(id string, events []Event)
+	getBuilding(id string) (Building, error)
+	getRooms(building string) ([]Room, error)
+	floorFromRoom(id, building string) int
+}
+
+// MongoModel -
+type MongoModel struct {
+	DB *mgo.Database
+}
+
+// NewMongoModel -
+func NewMongoModel(db *mgo.Database) Model {
+	return MongoModel{DB: db}
+}
+
+func (model MongoModel) insertRoom(id, building string) error {
+	c := model.DB.C("rooms")
+	floor := model.floorFromRoom(id, building)
 	r := &Room{
 		ID:       id,
 		Building: building,
@@ -24,73 +72,38 @@ func (a *App) addRoom(id, building string) (Room, error) {
 	}
 	s := bson.M{"id": id}
 	_, err := c.Upsert(s, r)
-	return *r, err
+	return err
 }
 
-func (a *App) addEvent(roomID string, e []Event) {
-	c := a.DB.C("rooms")
-	c.Upsert(bson.M{"id": roomID}, bson.M{"$push": bson.M{
-		"events": bson.M{
-			"$each": e,
+func (model MongoModel) addRoomEvents(id string, events []Event) {
+	c := model.DB.C("rooms")
+	c.Upsert(
+		bson.M{"id": id},
+		bson.M{
+			"$push": bson.M{
+				"events": bson.M{
+					"$each": events,
+				},
+			},
 		},
-	},
-	})
+	)
 }
 
-func (a *App) getBuilding(id string) (Building, error) {
-	c := a.DB.C("rooms")
-	var rooms = []Room{}
+func (model MongoModel) getBuilding(id string) (Building, error) {
+	c := model.DB.C("rooms")
+	var rooms []Room
 	err := c.Find(bson.M{"building": id}).Sort("floor", "id").All(&rooms)
 	return Building{rooms}, err
 }
 
-// Donne le nombre total de salles d'un batiment
-// ainsi que le nombre de salles disponibles
-func (a *App) getBuildingInfos(id string) (BuildingInfo, error) {
-	c := a.DB.C("rooms")
-	var bInfos BuildingInfo
+func (model MongoModel) getRooms(building string) ([]Room, error) {
+	c := model.DB.C("rooms")
 	var rooms []Room
-	err := c.Find(bson.M{"building": id}).All(&rooms)
-
-	tmstp := time.Now().Unix()
-	notDisp := 0
-	for _, room := range rooms {
-		for _, event := range room.Events {
-			if tmstp > event.Time.Start && tmstp < event.Time.End {
-				notDisp++
-			}
-		}
-	}
-
-	bInfos = BuildingInfo{
-		TotalRooms: len(rooms),
-		FreeRooms:  len(rooms) - notDisp,
-	}
-
-	return bInfos, err
+	err := c.Find(bson.M{"building": building}).All(&rooms)
+	return rooms, err
 }
 
-func (a *App) updateCalendars(conf roomConfObj, b string) {
-	for rid, r := range conf[b] {
-		events := getEvents(b, rid, r.URLID)
-		a.addRoom(rid, b)
-		eventsToAdd := []Event{}
-		for _, e := range events {
-			checkTime := e.Start.Before(time.Now().Truncate(24*time.Hour).AddDate(0, 0, 7)) && e.Start.After(time.Now())
-			if e.Summary != "Férié" && checkTime {
-				ev := Event{
-					Name:        e.Summary,
-					Description: e.Description,
-					Location:    e.Location,
-					Time:        TimeDuration{e.Start.Unix() * 1000, *e.Start, e.End.Unix() * 1000},
-				}
-				eventsToAdd = append(eventsToAdd, ev)
-			}
-		}
-		sort.Slice(eventsToAdd, func(i, j int) bool {
-			return eventsToAdd[i].Time.Start > eventsToAdd[j].Time.Start
-		})
-		a.addEvent(rid, eventsToAdd)
-		log.Printf("updating %s done", rid)
-	}
+func (model MongoModel) floorFromRoom(id, building string) int {
+	conf := readRoomConf()
+	return conf[building][id].Floor
 }

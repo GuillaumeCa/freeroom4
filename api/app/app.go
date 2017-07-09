@@ -16,6 +16,7 @@ type App struct {
 	Router *mux.Router
 	DB     *mgo.Database
 	N      *negroni.Negroni
+	Model  Model
 }
 
 type middleware func(http.ResponseWriter, *http.Request, http.HandlerFunc)
@@ -26,7 +27,8 @@ func (a *App) Initialize(dbname string) {
 	if err != nil {
 		panic(err)
 	}
-	a.DB = session.DB(dbname)
+
+	a.Model = NewMongoModel(session.DB(dbname))
 
 	a.N = negroni.New()
 	a.Use(setupCors)

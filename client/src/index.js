@@ -9,9 +9,12 @@ import './index.css';
 
 import moment from 'moment';
 import 'moment/locale/fr';
-moment.locale('fr')
+moment.locale('fr');
 
-console.log('api-url', process.env.REACT_APP_API_URL);
+import registerServiceWorker from './registerServiceWorker';
+registerServiceWorker.register();
+
+// console.log('api-url', process.env.REACT_APP_API_URL);
 
 ReactDOM.render(
   <Provider store={store}>

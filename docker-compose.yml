@@ -1,0 +1,16 @@
+version: '3'
+services:
+  api:
+    image: freeroom4-api
+    environment:
+      DB_HOST: mongo
+      DB_NAME: freeroom
+  
+  front:
+    image: freeroom4-front
+    ports:
+      - "9000:80"
+  
+  mongo:
+    image: mongo
+  

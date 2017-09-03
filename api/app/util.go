@@ -45,12 +45,12 @@ type roomConfObj map[string]map[string]roomConf
 func readRoomConf() roomConfObj {
 	c, err := ioutil.ReadFile("conf/rooms.json")
 	if err != nil {
-		log.Fatal("File rooms.json cannot be read")
+		log.Fatalf("File rooms.json cannot be read: %v", err)
 	}
 	var conf roomConfObj
 	err = json.Unmarshal(c, &conf)
 	if err != nil {
-		log.Fatalf("Error reading room conf: %s", err.Error())
+		log.Fatalf("Error reading room conf: %v", err)
 	}
 	return conf
 }

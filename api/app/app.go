@@ -3,6 +3,7 @@ package app
 import (
 	"log"
 	"net/http"
+	"os"
 
 	mgo "gopkg.in/mgo.v2"
 	cron "gopkg.in/robfig/cron.v2"
@@ -22,13 +23,17 @@ type App struct {
 type middleware func(http.ResponseWriter, *http.Request, http.HandlerFunc)
 
 // Initialize -
-func (a *App) Initialize(dbname string) {
-	session, err := mgo.Dial("localhost")
+func (a *App) Initialize(hostdb, dbname string) {
+	session, err := mgo.Dial(hostdb)
 	if err != nil {
-		panic(err)
+		log.Fatalf("could not connect to mongo database: %v", err)
 	}
 
 	a.Model = NewMongoModel(session.DB(dbname))
+
+	conf := readRoomConf()
+	a.updateCalendars(conf, buildNDC)
+	a.updateCalendars(conf, buildNDL)
 
 	a.N = negroni.New()
 	a.Use(setupCors)
@@ -43,7 +48,8 @@ func (a *App) Initialize(dbname string) {
 
 // Run -
 func (a *App) Run(addr string) {
-	log.Printf("Server started at %s...\n", addr)
+	log.SetOutput(os.Stdout)
+	log.Printf("Freeroom API started at %s...\n", addr)
 	log.Fatal(http.ListenAndServe(addr, a.N))
 }
 

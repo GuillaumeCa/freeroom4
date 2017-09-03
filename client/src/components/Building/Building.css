@@ -113,9 +113,10 @@
   margin: 50px;
   margin-right: 0;
   margin-bottom: 0;
+  padding-top: 60px;
   width: 60%;
-  background: #f3f3f3;
-  align-items: center;
+  /*background: #f3f3f3;*/
+  /*align-items: center;*/
   border-radius: 5px;
   justify-content: center;
   min-height: 300px;

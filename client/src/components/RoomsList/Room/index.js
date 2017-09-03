@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { string, array } from 'prop-types';
 
 import moment from 'moment';
 
@@ -19,12 +20,21 @@ export default class Room extends Component {
     showEvents: false,
   }
 
+  static propTypes = {
+    roomID: string.isRequired,
+    events: array.isRequired,
+  }
+
   componentDidMount() {
     // Scheduling update of currentEvent
     this.updateStatus()
-    setInterval(() => {
+    this.updateScheduler = setInterval(() => {
       this.updateStatus();
     }, 1000 * 60);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.updateScheduler)
   }
 
   updateStatus() {
@@ -37,7 +47,7 @@ export default class Room extends Component {
     const now = new Date();
     const filtered = events.sort((a, b) => a.time.start > b.time.start)
                    .filter(e => (new Date(e.time.start)).getDate() === now.getDate())
-    for (let e of filtered) {
+    for (const e of filtered) {
       const start = e.time.start;
       if (start > now.getTime()) {
         return { status: FREE_FOR, currentEvent: e };

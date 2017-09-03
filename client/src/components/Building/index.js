@@ -6,6 +6,9 @@ import RoomsList from '../RoomsList';
 import { connect } from 'react-redux';
 import * as actions from '../../state/roomAction';
 
+import BuildingMap from '../Map';
+import { buildingsConf } from '../../map.conf';
+
 import './Building.css';
 
 class BItem extends Component {
@@ -162,7 +165,8 @@ class BSwitcher extends Component {
           {
             selected &&
             <div className="Map">
-              Map coming back Soon :)
+              {/* Map coming back Soon :) */}
+              <BuildingMap config={buildingsConf.NDC} />
             </div>
           }
         </div>

@@ -6,15 +6,15 @@ class Footer extends Component {
     const date = new Date().getFullYear();
     return (
       <div className="Footer">
-        <div>
+        {/* <div>
           <a href="" className="link">Langues</a>
-        </div>
-        <div>
+          </div>
+          <div>
           <a href="" className="link">Changelog</a>
-        </div>
-        <div>
+          </div>
+          <div>
           <a href="" className="link">A propos</a>
-        </div>
+        </div> */}
         <p className="text secondary-color">Copyright © {date} Guillaume Carré - <a href="http://www.isep.fr" className="link">ISEP</a></p>
       </div>
     );

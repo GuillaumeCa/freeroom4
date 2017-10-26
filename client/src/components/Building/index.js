@@ -125,6 +125,15 @@ class BSwitcher extends Component {
     }
     return { free: 0, total: 0 }
   }
+  
+  getBuildingConf() {
+    switch (this.state.selected) {
+      case "NDC":
+        return buildingsConf.NDC;
+      case "NDL":
+        return buildingsConf.NDL;
+    }
+  }
 
   render() {
 
@@ -165,8 +174,7 @@ class BSwitcher extends Component {
           {
             selected &&
             <div className="Map">
-              {/* Map coming back Soon :) */}
-              <BuildingMap config={buildingsConf.NDC} />
+              <BuildingMap config={this.getBuildingConf} />
             </div>
           }
         </div>

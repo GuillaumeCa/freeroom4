@@ -39,7 +39,7 @@ class BItem extends Component {
     })
 
     const floor = infos
-    const bestFloor =  floor === null ? '' : (floor === 1 ? '1er' : floor + 'e')
+    const bestFloor = floor === null ? '' : (floor === 1 ? '1er' : floor + 'e')
 
     return (
       <div className={classes}>
@@ -101,7 +101,7 @@ class BSwitcher extends Component {
     rooms.forEach(r => {
       let isFree = true;
       r.events.forEach(e => {
-        if (now > e.time.start && now < e.time.end) {
+        if (now > e.time.start && now < e.time.end) {
           isFree = false;
           notFree.push(r);
         }
@@ -116,7 +116,7 @@ class BSwitcher extends Component {
   getRoomsNbStats(building) {
     if (this.state.selected === building) {
       const { free } = this.selectFreeRooms(this.props.rooms);
-      return { total: this.props.rooms.length, free: free.length  };
+      return { total: this.props.rooms.length, free: free.length };
     }
     const { stats } = this.props;
     if (stats.hasOwnProperty(building)) {
@@ -125,7 +125,7 @@ class BSwitcher extends Component {
     }
     return { free: 0, total: 0 }
   }
-  
+
   getBuildingConf() {
     switch (this.state.selected) {
       case "NDC":
@@ -174,7 +174,7 @@ class BSwitcher extends Component {
           {
             selected &&
             <div className="Map">
-              <BuildingMap config={this.getBuildingConf} />
+              <BuildingMap config={this.getBuildingConf()} />
             </div>
           }
         </div>

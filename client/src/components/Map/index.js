@@ -26,8 +26,8 @@ function RoomMap(props) {
       {
         props.floor.type === 'RECT' ?
           <Rect w={pos.width} h={pos.height} />
-        :
-        <Poly path={props.floor.path} transform={props.floor.transform} />
+          :
+          <Poly path={props.floor.path} transform={props.floor.transform} />
       }
       {
         props.text &&
@@ -36,6 +36,7 @@ function RoomMap(props) {
           y={props.text.y}
           fill={props.fill}
           textAnchor="middle"
+          fontSize={props.text.fontSize || '15'}
           stroke={props.stroke}>{props.roomID}</text>
       }
     </svg>
@@ -45,8 +46,8 @@ function RoomMap(props) {
 function FloorMap(props) {
   const style = {
     zIndex: -1,
-    height: 195,
-    width: 320,
+    height: props.pos.height,
+    width: props.pos.width,
     filter: 'drop-shadow(0 8px 15px #ccc)',
   }
   return (
@@ -57,7 +58,7 @@ function FloorMap(props) {
 }
 
 function BuildingMap(props) {
-  let building = [...props.config ];
+  let building = [...props.config];
   building.reverse()
   const floorStyle = {
     position: 'relative',
@@ -80,7 +81,7 @@ function BuildingMap(props) {
       {
         building.map(b => {
           return (
-            <div key={b.floor} style={{ width: 320, height: 195, marginTop: -60 }}>
+            <div key={b.floor} style={{ width: b.pos.width, height: b.pos.height, marginTop: -60 }}>
               {/* <h1 style={floorName}>{b.floor}</h1> */}
               <div style={floorWrapper}>
                 <div style={floorStyle}>
@@ -93,10 +94,10 @@ function BuildingMap(props) {
                         text={r.text}
                         floor={r.floor}
                         fill="#FFF"
-                             stroke="#FFF"/>
+                        stroke="#FFF" />
                     })
                   }
-                  <FloorMap path={b.ground} />
+                  <FloorMap path={b.ground} pos={b.pos} />
                 </div>
               </div>
             </div>

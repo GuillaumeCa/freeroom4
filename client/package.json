@@ -21,7 +21,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "build:docker": "REACT_APP_API_URL=http://localhost:9000/api react-scripts build",
-    "build:pi": "REACT_APP_API_URL=https://free-room-isep.ddns.net/api react-scripts build",
+    "build:pi": "REACT_APP_API_URL=http://free-room-isep.ddns.net/api react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }

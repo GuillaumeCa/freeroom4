@@ -36,15 +36,15 @@ func TestGetBuildingInfos(t *testing.T) {
 		Event{
 			Name: "Test 1",
 			Time: TimeDuration{
-				Start: now.Add(time.Minute * -10).Unix(),
-				End:   now.Add(time.Hour * 1).Unix(),
+				Start: now.Add(-10*time.Minute).Unix() * 1000,
+				End:   now.Add(time.Hour).Unix() * 1000,
 			},
 		},
 		Event{
 			Name: "Test 2",
 			Time: TimeDuration{
-				Start: now.Add(time.Hour * 13).Unix(),
-				End:   now.Add(time.Hour * 15).Unix(),
+				Start: now.Add(13*time.Hour).Unix() * 1000,
+				End:   now.Add(15*time.Hour).Unix() * 1000,
 			},
 		},
 	}
@@ -52,20 +52,15 @@ func TestGetBuildingInfos(t *testing.T) {
 	app := App{Model: testModel{
 		rooms: []Room{
 			Room{ID: "N16", Building: "NDC", Events: events},
-			Room{ID: "N15", Building: "NDC", Events: events},
+			Room{ID: "N15", Building: "NDC", Events: []Event{}},
 		},
 	}}
 
 	binfo, _ := app.getBuildingInfos("NDC")
-	t.Log("retrieving free rooms (expect to be 1)")
-	t.Log(binfo)
 	if binfo.FreeRooms != 1 {
-		t.Errorf("free room nb doesn't match")
-		return
+		t.Fatalf("free room nb doesn't match expected %v, got: %v", 1, binfo.FreeRooms)
 	}
-	t.Log("retrieving total rooms nb (expect to be 2)")
 	if binfo.TotalRooms != 2 {
-		t.Errorf("total room nb doesn't match")
-		return
+		t.Fatalf("total room nb doesn't match expected %v, got: %v", 2, binfo.TotalRooms)
 	}
 }

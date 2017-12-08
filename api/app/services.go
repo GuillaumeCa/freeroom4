@@ -20,7 +20,7 @@ func (a *App) getBuildingInfos(id string) (BuildingInfo, error) {
 		return bInfos, err
 	}
 
-	now := time.Now().Unix()
+	now := time.Now().Unix() * 1000
 	notDisp := 0
 	for _, room := range rooms {
 		for _, event := range room.Events {

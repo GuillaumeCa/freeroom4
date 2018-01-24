@@ -46,8 +46,9 @@ func (a *App) updateCalendars(conf roomConfObj, b string) {
 
 		eventsToAdd := []Event{}
 		for _, e := range events {
-			checkTime := e.Start.Before(time.Now().Truncate(24*time.Hour).AddDate(0, 0, 7)) && e.Start.After(time.Now())
-			if e.Summary != "Férié" && checkTime {
+			timeOffset := time.Now().Truncate(24*time.Hour).AddDate(0, 0, 7)
+			isTimeInBounds := e.Start.After(time.Now()) && e.Start.Before(timeOffset)
+			if e.Summary != "Férié" && isTimeInBounds {
 				ev := Event{
 					Name:        e.Summary,
 					Description: e.Description,

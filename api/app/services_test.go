@@ -56,7 +56,11 @@ func TestGetBuildingInfos(t *testing.T) {
 		},
 	}}
 
-	binfo, _ := app.getBuildingInfos("NDC")
+	binfo, err := app.getBuildingInfos("NDC")
+	if err != nil {
+		t.Fatalf("got error: %v", err)
+	}
+
 	if binfo.FreeRooms != 1 {
 		t.Fatalf("free room nb doesn't match expected %v, got: %v", 1, binfo.FreeRooms)
 	}

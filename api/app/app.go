@@ -23,7 +23,7 @@ type App struct {
 type middleware func(http.ResponseWriter, *http.Request, http.HandlerFunc)
 
 // Initialize -
-func (a *App) Initialize(hostdb, dbname string) {
+func (a *App) Initialize(hostdb, dbname string, dlOnStart bool) {
 	session, err := mgo.Dial(hostdb)
 	if err != nil {
 		log.Fatalf("could not connect to mongo database: %v", err)
@@ -31,9 +31,11 @@ func (a *App) Initialize(hostdb, dbname string) {
 
 	a.Model = NewMongoModel(session.DB(dbname))
 
-	conf := readRoomConf()
-	a.updateCalendars(conf, buildNDC)
-	a.updateCalendars(conf, buildNDL)
+	if dlOnStart {
+		conf := readRoomConf()
+		a.updateCalendars(conf, buildNDC)
+		a.updateCalendars(conf, buildNDL)
+	}
 
 	a.N = negroni.New()
 	a.Use(setupCors)

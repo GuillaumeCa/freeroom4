@@ -9,9 +9,10 @@ import (
 )
 
 var (
-	listen = flag.String("listen", "0.0.0.0:8080", "HTTP listen address")
-	dbName = flag.String("db-name", "freeroomv4", "Database name")
-	dbHost = flag.String("db-host", "localhost", "Database host")
+	listen  = flag.String("listen", "0.0.0.0:8080", "HTTP listen address")
+	dbName  = flag.String("db-name", "freeroomv4", "Database name")
+	dbHost  = flag.String("db-host", "localhost", "Database host")
+	dlStart = flag.Bool("dl-start", false, "Download the calendars on startup")
 )
 
 func main() {
@@ -23,6 +24,7 @@ func main() {
 		// getEnv("DB_USERNAME", "root"),
 		// getEnv("DB_PASSWORD", ""),
 		getEnv("DB_NAME", *dbName),
+		*dlStart,
 	)
 	a.Run(*listen)
 }

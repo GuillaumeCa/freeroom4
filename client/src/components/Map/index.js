@@ -60,31 +60,40 @@ function FloorMap(props) {
 function BuildingMap(props) {
   let building = [...props.config];
   building.reverse()
-  const floorStyle = {
-    position: 'relative',
-    transform: 'rotateX(55deg)',
-  }
-  const floorWrapper = {
-    perspective: 500,
-    height: 170,
-    marginTop: -50
-  }
-  const floorName = {
-    position: 'relative',
-    left: -74,
-    transform: 'scale(4)',
-    transformOrigin: '13px 13px',
-    color: '#d2d2d2',
+
+  const style = {
+    floorStyle: {
+      position: 'relative',
+      transform: 'rotateX(55deg)',
+    },
+    floorWrapper: {
+      perspective: 500,
+      height: 170,
+      marginTop: -50
+    },
+    floorName: {
+      position: 'relative',
+      left: -100,
+      top: 50,
+      margin: 0,
+      transform: 'scale(2)',
+      transformOrigin: '13px 13px',
+      color: '#d2d2d2',
+    },
   }
   return (
     <div>
       {
         building.map(b => {
+          let floorName = b.floor;
+          if (Number(b.floor) === 0) floorName = 'RDC';
+          if (Number(b.floor) === 1) floorName = '1er';
+          if (Number(b.floor) > 1) floorName += 'e';
           return (
             <div key={b.floor} style={{ width: b.pos.width, height: b.pos.height, marginTop: -60 }}>
-              {/* <h1 style={floorName}>{b.floor}</h1> */}
-              <div style={floorWrapper}>
-                <div style={floorStyle}>
+              <h1 style={style.floorName}>{floorName}</h1>
+              <div style={style.floorWrapper}>
+                <div style={style.floorStyle}>
                   {
                     b.rooms.map(r => {
                       return <RoomMap

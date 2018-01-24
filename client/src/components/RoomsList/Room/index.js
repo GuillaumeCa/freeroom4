@@ -30,7 +30,7 @@ export default class Room extends Component {
     this.updateStatus()
     this.updateScheduler = setInterval(() => {
       this.updateStatus();
-    }, 1000 * 60);
+    }, 1000 * 1);
   }
 
   componentWillUnmount() {
@@ -46,7 +46,7 @@ export default class Room extends Component {
   computeStatus(events) {
     const now = new Date();
     const filtered = events.sort((a, b) => a.time.start > b.time.start)
-                   .filter(e => (new Date(e.time.start)).getDate() === now.getDate())
+      .filter(e => (new Date(e.time.start)).getDate() === now.getDate())
     for (const e of filtered) {
       const start = e.time.start;
       if (start > now.getTime()) {
@@ -80,7 +80,7 @@ export default class Room extends Component {
           <h2 className="Room-id">{roomID}</h2>
           <div className="Room-status">{renderedStatus}</div>
         </div>
-        { showEvents && <RoomEvents events={events} /> }
+        {showEvents && <RoomEvents events={events} />}
       </div>
     )
   }

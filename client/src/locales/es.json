@@ -1,0 +1,18 @@
+{
+  "header": {
+    "subtitle": "Encuentra una habitación fácilmente!"
+  },
+  "footer": {
+    "languagesLabel": "Idiomas"
+  },
+  "building": {
+    "available": "Disponible"
+  },
+  "room": {
+    "free": "Libre",
+    "free-for": "Libre para"
+  },
+  "events": {
+    "no-events": "No hay eventos para venir hoy"
+  }
+}

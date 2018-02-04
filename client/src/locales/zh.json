@@ -1,0 +1,18 @@
+{
+  "header": {
+    "subtitle": "轻松找到房间！"
+  },
+  "footer": {
+    "languagesLabel": "语言"
+  },
+  "building": {
+    "available": "可得到"
+  },
+  "room": {
+    "free": "自由",
+    "free-for": "免费"
+  },
+  "events": {
+    "no-events": "今天没有事情要来"
+  }
+}

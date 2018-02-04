@@ -1,0 +1,18 @@
+{
+  "header": {
+    "subtitle": "簡単に部屋を見つける！"
+  },
+  "footer": {
+    "languagesLabel": "言語"
+  },
+  "building": {
+    "available": "利用可能"
+  },
+  "room": {
+    "free": "自由な",
+    "free-for": "無料で"
+  },
+  "events": {
+    "no-events": "今日のイベントはありません"
+  }
+}

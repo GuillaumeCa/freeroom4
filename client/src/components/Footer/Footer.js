@@ -16,14 +16,17 @@ const Modal = (props) => {
       bottom: 0,
       background: 'rgba(255,255,255,.5)',
       zIndex: 100,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
       pointerEvents: props.open ? 'auto' : 'none',
       opacity: props.open ? 1 : 0,
       transition: 'opacity .3s ease',
     }}>
       <div style={{
-        maxWidth: 500,
-        margin: '0 auto',
-        marginTop: 100,
+        width: 500,
+        borderRadius: 5,
+        margin: 20,
         background: 'white',
         ...props.style
       }}>
@@ -57,6 +60,7 @@ class Footer extends Component {
 
   selectLang = lang => e => {
     translate.setLocale(lang);
+    localStorage.setItem('lang', lang);
     this.closeModal();
   };
 
@@ -66,12 +70,13 @@ class Footer extends Component {
       <div className="Footer">
         <Modal style={{
           padding: 20,
-          minHeight: 500,
           boxShadow: '0 0 10px rgba(0,0,0,.2)'
         }} open={this.state.modalOpen}>
           <ButtonLang lang="Français" onClick={this.selectLang('fr')} />
           <ButtonLang lang="English" onClick={this.selectLang('en')} />
-          <Button label="Ok" onClick={this.closeModal} />
+          <ButtonLang lang="Español" onClick={this.selectLang('es')} />
+          <ButtonLang lang="中文" onClick={this.selectLang('zh')} />
+          <ButtonLang lang="日本語" onClick={this.selectLang('ja')} />
         </Modal>
         <div>
           <span className="link" onClick={this.showLang}><Translate t="footer.languagesLabel" /></span>

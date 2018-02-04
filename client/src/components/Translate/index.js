@@ -17,7 +17,17 @@ export default class Translate extends Component {
   }
 
   getTranslation() {
-    return translate(this.props.t);
+    let opt = {};
+    if (this.props.count) {
+      opt.count = this.props.count;
+    }
+    if (this.props.data) {
+      opt = {
+        ...opt,
+        ...this.props.data
+      };
+    }
+    return translate(this.props.t, opt);
   }
 
   render() {

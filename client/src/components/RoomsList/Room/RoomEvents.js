@@ -3,6 +3,7 @@ import moment from 'moment';
 import { array } from 'prop-types';
 
 import LargeBtn from '../../Button/Large';
+import Translate from '../../Translate';
 
 export default class RoomEvents extends Component {
 
@@ -63,7 +64,7 @@ export default class RoomEvents extends Component {
       <div className="RoomEvents">
         {
           nextEvents.length > 0 ?
-            this.renderEvent(nextEvents[eventIndex]) : <div>Pas d'évènement à venir</div>
+            this.renderEvent(nextEvents[eventIndex]) : <div><Translate t="events.no-events" /></div>
         }
         {
           nextEvents.length > 0 &&

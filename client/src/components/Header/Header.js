@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './Header.css';
-
+import Translate from '../Translate';
 
 class Header extends Component {
 
@@ -8,7 +8,7 @@ class Header extends Component {
     return (
       <div>
         <h1 className="Header-title">FreeRoom</h1>
-        <h2 className="Header-subtitle">Trouvez facilement une salle disponible !</h2>
+        <h2 className="Header-subtitle"><Translate t="header.subtitle" /></h2>
       </div>
     );
   }

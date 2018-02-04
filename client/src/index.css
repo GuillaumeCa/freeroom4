@@ -44,6 +44,7 @@ a {
   font-size: 13px;
   margin: 5px 0;
   text-transform: uppercase;
+  cursor: pointer;
 }
 
 .link:hover {

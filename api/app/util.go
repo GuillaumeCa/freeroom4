@@ -61,12 +61,16 @@ func getRoomFloor(building, id string) int {
 }
 
 func getEvents(building, roomID, urlID string) []gocal.Event {
-	url := fmt.Sprintf("http://planning.isep.fr/Telechargements/ical/EdT_%s.ics?version=13.0.2.1&idICal=%s&param=643d5b312e2e36325d2666683d3126663d31", roomID, urlID)
+	url := fmt.Sprintf(
+		"http://planning.isep.fr/Telechargements/ical/EdT_%s.ics?version=13.0.2.1&idICal=%s&param=643d5b312e2e36325d2666683d3126663d31",
+		roomID, urlID,
+	)
 	res, err := http.Get(url)
 	if err != nil {
 		log.Fatalf("Cannot get calendar for room %s: %s", roomID, err.Error())
 	}
 	defer res.Body.Close()
+
 	c := gocal.NewParser(res.Body)
 	c.Parse()
 	return c.Events

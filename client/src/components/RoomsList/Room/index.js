@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { string, array } from 'prop-types';
+import Translate from '../../Translate';
 
 import moment from 'moment';
 
@@ -64,9 +65,9 @@ export default class Room extends Component {
     const { status, currentEvent } = this.state
     switch (status) {
       case FREE:
-        return <span>libre</span>;
+        return <span><Translate t="room.free" /></span>;
       case FREE_FOR:
-        return <span>libre pendant <RoomTime time={currentEvent.time.start} /></span>;
+        return <span><Translate t="room.free-for" /> <RoomTime time={currentEvent.time.start} /></span>;
     }
   }
 

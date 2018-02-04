@@ -1,0 +1,18 @@
+{
+  "header": {
+    "subtitle": "Trouvez facilement une salle disponible !"
+  },
+  "footer": {
+    "languagesLabel": "Langues"
+  },
+  "building": {
+    "available": "Disponibles"
+  },
+  "room": {
+    "free": "Libre",
+    "free-for": "Libre pendant"
+  },
+  "events": {
+    "no-events": "Pas d'évènement à venir"
+  }
+}

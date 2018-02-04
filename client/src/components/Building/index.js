@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import classnames from 'classnames';
+import Translate from '../Translate';
 
 import RoomsList from '../RoomsList';
 
@@ -54,7 +55,7 @@ class BItem extends Component {
               <div className="BItem-roomsLeft-counter">
                 <span>{freeRooms}</span>/{totalRooms}
               </div>
-              <div className="BItem-roomsLeft-text">Disponibles</div>
+              <div className="BItem-roomsLeft-text"><Translate t="building.available" /></div>
             </div>
           </div>
         </div>

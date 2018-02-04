@@ -9,11 +9,12 @@ import './index.css';
 
 import registerServiceWorker from './registerServiceWorker';
 
+import './setupLocales';
+
 import moment from 'moment';
 
 import 'moment/locale/fr';
 moment.locale('fr');
-
 
 
 ReactDOM.render(

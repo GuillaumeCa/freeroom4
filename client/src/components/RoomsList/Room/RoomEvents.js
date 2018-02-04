@@ -49,7 +49,7 @@ export default class RoomEvents extends Component {
     const { name, desc, location, time } = event;
     const descF = desc.replace(/\\n/g, "<br>");
     return (
-      <div class="event-info">
+      <div className="event-info">
         <h3 className="event-title primary-color">{name}</h3>
         <p className="event-desc secondary-color" dangerouslySetInnerHTML={{ __html: descF }}></p>
         <span>{location}</span>

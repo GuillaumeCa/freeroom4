@@ -1,14 +1,14 @@
 import React from 'react';
 
 function Rect(props) {
-  return <rect x={0} y={0} width={props.w} height={props.h} fill="#5CA7FD"></rect>
+  return <rect x={0} y={0} width={props.w} height={props.h} fill={props.color}></rect>
 }
 
 function Poly(props) {
   if (props.transform) {
-    return <path d={props.path} transform={props.transform} fill="#5CA7FD"></path>
+    return <path d={props.path} transform={props.transform} fill={props.color}></path>
   }
-  return <path d={props.path} fill="#5CA7FD"></path>
+  return <path d={props.path} fill={props.color}></path>
 }
 
 function RoomMap(props) {
@@ -25,9 +25,9 @@ function RoomMap(props) {
     <svg style={style}>
       {
         props.floor.type === 'RECT' ?
-          <Rect w={pos.width} h={pos.height} />
+          <Rect w={pos.width} h={pos.height} color={props.color} />
           :
-          <Poly path={props.floor.path} transform={props.floor.transform} />
+          <Poly path={props.floor.path} transform={props.floor.transform} color={props.color} />
       }
       {
         props.text &&
@@ -102,6 +102,7 @@ function BuildingMap(props) {
                         pos={r.pos}
                         text={r.text}
                         floor={r.floor}
+                        color="#5CA7FD"
                         fill="#FFF"
                         stroke="#FFF" />
                     })

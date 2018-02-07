@@ -23,7 +23,9 @@ export default class RoomEvents extends Component {
 
   getNextEvents(events) {
     const now = new Date();
-    return events.filter(e => e.time.start > now.getTime());
+    return events
+      .filter(e => e.time.start > now.getTime())
+      .sort((a, b) => a.time.start > b.time.start);
   }
 
   formatDate(date, withDate) {

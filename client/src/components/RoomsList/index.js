@@ -25,7 +25,7 @@ class RoomsList extends Component {
   }
 
   render() {
-    const { freeRooms, notFree } = this.props
+    const { freeRooms, notFree } = this.props;
     const floors = this.buildFloors(freeRooms);
     const list = floors.map((item, index) => (
       <Floor key={index} floor={item.floor}>
@@ -42,7 +42,7 @@ class RoomsList extends Component {
     ))
     return (
       <div className="RoomsList">
-        { this.props.selected != null && list }
+        {this.props.selected != null && list}
       </div>
     )
   }

@@ -46,12 +46,13 @@ export default class Room extends Component {
 
   computeStatus(events) {
     const now = new Date();
-    const filtered = events.sort((a, b) => a.time.start > b.time.start)
+    const filtered = events
       .filter(e => (new Date(e.time.start)).getDate() === now.getDate())
-    for (const e of filtered) {
-      const start = e.time.start;
+      .sort((a, b) => a.time.start > b.time.start)
+    for (const event of filtered) {
+      const start = event.time.start;
       if (start > now.getTime()) {
-        return { status: FREE_FOR, currentEvent: e };
+        return { status: FREE_FOR, currentEvent: event };
       }
     }
     return { status: FREE, currentEvent: null };

@@ -48,7 +48,7 @@ export default class Room extends Component {
     const now = new Date();
     const filtered = events
       .filter(e => (new Date(e.time.start)).getDate() === now.getDate())
-      .sort((a, b) => a.time.start > b.time.start)
+      .sort((a, b) => a.time.start > b.time.start ? 1 : -1);
     for (const event of filtered) {
       const start = event.time.start;
       if (start > now.getTime()) {

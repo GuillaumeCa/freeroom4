@@ -72,11 +72,42 @@
   margin-bottom: 5px;
 }
 
+.RoomEvents .event-info {
+  margin: 0 10px;
+  flex: 1;
+}
+
 .RoomEvents .event-info > span {
   font-size: 0.9em;
   font-weight: 500;
   margin-right: 15px;
   color: #fca700;
+}
+
+.RoomEvents .events {
+  display: flex;
+}
+
+
+.RoomEvents .sidebutton svg {
+  width: 30px;
+  padding: 5px;
+  color: #555;
+  stroke-width: 10;
+}
+
+.RoomEvents .sidebutton {
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  background: #eee;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background .3s ease;
+}
+
+.RoomEvents .sidebutton:hover {
+  background: #ddd;
 }
 
 @keyframes enter-smooth {

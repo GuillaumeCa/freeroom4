@@ -5,6 +5,9 @@ import { array } from 'prop-types';
 import LargeBtn from '../../Button/Large';
 import Translate from '../../Translate';
 
+import RightArrow from '../../Svg/RightArrow';
+import LeftArrow from '../../Svg/LeftArrow';
+
 export default class RoomEvents extends Component {
 
   state = {
@@ -62,18 +65,31 @@ export default class RoomEvents extends Component {
 
   render() {
     const { nextEvents, eventIndex } = this.state;
+    const eventRight = nextEvents[eventIndex + 1] != null;
+    const eventLeft = nextEvents[eventIndex - 1] != null;
     return (
       <div className="RoomEvents">
         {
-          nextEvents.length > 0 ?
-            this.renderEvent(nextEvents[eventIndex]) : <div><Translate t="events.no-events" /></div>
+          nextEvents.length > 0 &&
+          <div className="events">
+            {
+              eventLeft &&
+              <div className="sidebutton" onClick={this.onPreviousEvent}>
+                <LeftArrow />
+              </div>
+            }
+            {this.renderEvent(nextEvents[eventIndex])}
+            {
+              eventRight &&
+              <div className="sidebutton" onClick={this.onNextEvent}>
+                <RightArrow />
+              </div>
+            }
+          </div>
         }
         {
-          nextEvents.length > 0 &&
-          <div>
-            <LargeBtn label="Précédent" onClick={this.onPreviousEvent} />
-            <LargeBtn label="Suivant" onClick={this.onNextEvent} />
-          </div>
+          nextEvents.length == 0 &&
+          <Translate t="events.no-events" />
         }
       </div>
     )

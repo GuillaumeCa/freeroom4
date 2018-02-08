@@ -78,15 +78,15 @@ class Footer extends Component {
           <ButtonLang lang="中文" onClick={this.selectLang('zh')} />
           <ButtonLang lang="日本語" onClick={this.selectLang('ja')} />
         </Modal>
+
         <div>
           <span className="link" onClick={this.showLang}><Translate t="footer.languagesLabel" /></span>
         </div>
-        {/* <div>
-          <span className="link">Changelog</span>
-        </div>
+
         <div>
-          <span className="link">A propos</span>
-        </div> */}
+          <a href="https://github.com/GuillaumeCa/freeroom4" target="_blank" className="link">Github</a>
+        </div>
+
         <p className="text secondary-color">Copyright © {date} Guillaume Carré - <a href="http://www.isep.fr" className="link">ISEP</a></p>
       </div>
     );

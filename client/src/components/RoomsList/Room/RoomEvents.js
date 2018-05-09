@@ -36,7 +36,7 @@ export default class RoomEvents extends Component {
   }
 
   formatDate(date, withDate) {
-    if (withDate && new Date().getDate() != new Date(date).getDate()) {
+    if (withDate && new Date().getDate() !== new Date(date).getDate()) {
       return moment(date).format('D MMMM H:mm');
     }
     return moment(date).format('H:mm');
@@ -76,8 +76,8 @@ export default class RoomEvents extends Component {
 
   render() {
     const { nextEvents, eventIndex } = this.state;
-    const eventRight = nextEvents[eventIndex + 1] != null;
-    const eventLeft = nextEvents[eventIndex - 1] != null;
+    const eventRight = nextEvents[eventIndex + 1] !== null;
+    const eventLeft = nextEvents[eventIndex - 1] !== null;
     return (
       <div className="RoomEvents">
         {nextEvents.length > 0 && (
@@ -95,7 +95,7 @@ export default class RoomEvents extends Component {
             )}
           </div>
         )}
-        {nextEvents.length == 0 && <Translate t="events.no-events" />}
+        {nextEvents.length === 0 && <Translate t="events.no-events" />}
       </div>
     );
   }

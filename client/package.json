@@ -4,7 +4,7 @@
   "private": true,
   "devDependencies": {
     "@types/jest": "^22.2.3",
-    "react-scripts": "1.0.8"
+    "react-scripts": "1.1.4"
   },
   "dependencies": {
     "axios": "^0.15.3",
@@ -24,7 +24,8 @@
     "build": "sh -ac '. .env.${REACT_APP_ENV}; react-scripts build'",
     "build:docker": "REACT_APP_ENV=docker npm run build",
     "build:pi": "REACT_APP_ENV=pi npm run build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "react-scripts test",
+    "test:coverage": "react-scripts test --coverage",
     "eject": "react-scripts eject"
   }
 }

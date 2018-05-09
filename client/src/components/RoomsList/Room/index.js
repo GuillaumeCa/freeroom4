@@ -9,6 +9,8 @@ import { FREE, FREE_FOR, NOT_FREE } from '../../../config';
 import RoomTime from './RoomTime';
 import RoomEvents from './RoomEvents';
 
+import * as roomService from '../../../services/rooms';
+
 export default class Room extends Component {
   state = {
     status: FREE,
@@ -35,28 +37,9 @@ export default class Room extends Component {
 
   updateStatus() {
     const { events } = this.props;
-    const { status, currentEvent } = this.computeStatus(events);
-    this.setState({ status, currentEvent });
-  }
-
-  computeStatus(events) {
     const now = new Date();
-    const filtered = events
-      .filter(e => new Date(e.time.start).getDate() === now.getDate())
-      .sort((a, b) => (a.time.start > b.time.start ? 1 : -1));
-
-    const nowTimestamp = now.getTime(); //+ 1000 * 60 * 60 * 9;
-    for (const event of filtered) {
-      const start = event.time.start;
-      const end = event.time.end;
-      if (start < nowTimestamp && nowTimestamp < end) {
-        return { status: NOT_FREE, currentEvent: event };
-      }
-      if (start > nowTimestamp) {
-        return { status: FREE_FOR, currentEvent: event };
-      }
-    }
-    return { status: FREE, currentEvent: null };
+    const { status, currentEvent } = roomService.roomStatus(now, events);
+    this.setState({ status, currentEvent });
   }
 
   toggleEvents = () => {

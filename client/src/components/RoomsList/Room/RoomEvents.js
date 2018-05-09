@@ -10,7 +10,7 @@ import LeftArrow from '../../Svg/LeftArrow';
 
 export default class RoomEvents extends Component {
   state = {
-    nextEvents: [],
+    displayedEvents: [],
     eventIndex: 0,
   };
 
@@ -19,11 +19,11 @@ export default class RoomEvents extends Component {
   };
 
   componentDidMount() {
-    const nextEvents = this.getNextEvents(this.props.events);
-    this.setState({ nextEvents });
+    const displayedEvents = this.getDisplayedEvents(this.props.events);
+    this.setState({ displayedEvents });
   }
 
-  getNextEvents(events) {
+  getDisplayedEvents(events) {
     const now = new Date();
     return events
       .filter(e => {
@@ -43,27 +43,31 @@ export default class RoomEvents extends Component {
   }
 
   onNextEvent = () => {
-    const { eventIndex, nextEvents } = this.state;
-    if (nextEvents.length === eventIndex + 1) return;
+    const { eventIndex, displayedEvents } = this.state;
+    if (displayedEvents.length === eventIndex + 1) return;
     this.setState({ eventIndex: this.state.eventIndex + 1 });
   };
 
   onPreviousEvent = () => {
-    const { eventIndex, nextEvents } = this.state;
+    const { eventIndex, displayedEvents } = this.state;
     if (eventIndex === 0) return;
     this.setState({ eventIndex: this.state.eventIndex - 1 });
   };
 
   renderEvent(event) {
     const { name, desc, location, time } = event;
-    const descF = desc.replace(/\\n/g, '<br>');
+    const paragraphs = desc.split('\\n');
     return (
       <div className="event-info">
         <h3 className="event-title primary-color">{name}</h3>
-        <p
-          className="event-desc secondary-color"
-          dangerouslySetInnerHTML={{ __html: descF }}
-        />
+        <p className="event-desc secondary-color">
+          {paragraphs.map(p => (
+            <span key={p}>
+              {p}
+              <br />
+            </span>
+          ))}
+        </p>
         <span>{location}</span>
         <span>
           {this.formatDate(time.start, true)}&nbsp;-&nbsp;{this.formatDate(
@@ -75,19 +79,19 @@ export default class RoomEvents extends Component {
   }
 
   render() {
-    const { nextEvents, eventIndex } = this.state;
-    const eventRight = nextEvents[eventIndex + 1] !== null;
-    const eventLeft = nextEvents[eventIndex - 1] !== null;
+    const { displayedEvents, eventIndex } = this.state;
+    const eventRight = !!displayedEvents[eventIndex + 1];
+    const eventLeft = !!displayedEvents[eventIndex - 1];
     return (
       <div className="RoomEvents">
-        {nextEvents.length > 0 && (
+        {displayedEvents.length > 0 && (
           <div className="events">
             {eventLeft && (
               <div className="sidebutton" onClick={this.onPreviousEvent}>
                 <LeftArrow />
               </div>
             )}
-            {this.renderEvent(nextEvents[eventIndex])}
+            {this.renderEvent(displayedEvents[eventIndex])}
             {eventRight && (
               <div className="sidebutton" onClick={this.onNextEvent}>
                 <RightArrow />
@@ -95,7 +99,7 @@ export default class RoomEvents extends Component {
             )}
           </div>
         )}
-        {nextEvents.length === 0 && <Translate t="events.no-events" />}
+        {displayedEvents.length === 0 && <Translate t="events.no-events" />}
       </div>
     );
   }

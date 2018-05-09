@@ -6,46 +6,39 @@ import moment from 'moment';
 import Room from './Room';
 import Floor from './Floor';
 
-class RoomsList extends Component {
+import Button from '../Button/Large';
 
-  buildFloors(rooms) {
-    const floors = {}
-    const floorsList = [];
-    rooms.forEach(r => {
-      if (floors[r.floor] == null) floors[r.floor] = [];
-      floors[r.floor].push(r);
-    })
-    Object.keys(floors).forEach(k => {
-      floorsList.push({
-        floor: k,
-        rooms: floors[k]
-      })
-    })
-    return floorsList;
-  }
+import * as roomService from '../../services/rooms';
+
+class RoomsList extends Component {
+  renderFloor = (item, index) => {
+    return (
+      <Floor key={index} floor={item.floor}>
+        {item.rooms.map((room, index) => {
+          return (
+            <div key={index}>
+              <Room roomID={room.id} events={room.events} />
+            </div>
+          );
+        })}
+      </Floor>
+    );
+  };
 
   render() {
     const { freeRooms, notFree } = this.props;
-    const floors = this.buildFloors(freeRooms);
-    const list = floors.map((item, index) => (
-      <Floor key={index} floor={item.floor}>
-        {
-          item.rooms.map((room, index) => {
-            return (
-              <div key={index}>
-                <Room roomID={room.id} events={room.events} />
-              </div>
-            )
-          })
-        }
-      </Floor>
-    ))
-    return (
-      <div className="RoomsList">
-        {this.props.selected != null && list}
-      </div>
-    )
+    const freeFloors = roomService.buildFloors(freeRooms);
+    // const notFreeFloors = roomService.buildFloors(notFree);
+    if (this.props.selected) {
+      return (
+        <div className="RoomsList">
+          {/* <Button label="Afficher indisponible" /> */}
+          {freeFloors.map(this.renderFloor)}
+        </div>
+      );
+    }
+    return null;
   }
 }
 
-export default RoomsList
+export default RoomsList;

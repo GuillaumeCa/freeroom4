@@ -10,7 +10,8 @@
   },
   "room": {
     "free": "Libre",
-    "free-for": "Libre pendant"
+    "free-for": "Libre pendant",
+    "not-free": "Indisponible pendant"
   },
   "events": {
     "no-events": "Pas d'évènements à venir"

@@ -84,10 +84,10 @@ class Footer extends Component {
         </div>
 
         <div>
-          <a href="https://github.com/GuillaumeCa/freeroom4" target="_blank" className="link">Github</a>
+          <a href="https://github.com/GuillaumeCa/freeroom4" target="_blank" rel="noopener noreferrer" className="link">Github</a>
         </div>
 
-        <p className="text secondary-color">Copyright © {date} Guillaume Carré - <a href="http://www.isep.fr" className="link">ISEP</a></p>
+        <p className="text secondary-color">Copyright © {date} Guillaume Carré - <a href="http://www.isep.fr" target="_blank" rel="noopener noreferrer" className="link">ISEP</a></p>
       </div>
     );
   }

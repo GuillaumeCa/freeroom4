@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 import classnames from 'classnames';
 import Translate from '../Translate';
@@ -10,138 +11,96 @@ import * as actions from '../../state/roomAction';
 import BuildingMap from '../Map';
 import { buildingsConf } from '../../map.conf';
 
+import * as roomService from '../../services/rooms';
+
 import './Building.css';
 
-class BItem extends Component {
+function BItem({
+  selected,
+  bgImageUrl,
+  name,
+  freeRooms,
+  totalRooms,
+  selectBuilding,
+}) {
+  const classes = classnames({
+    'BItem-wrapper': true,
+    expanded: selected === name,
+    hidden: selected != null && selected !== name,
+  });
 
-  componentWillMount() {
-    // this.props.roomInfos(this.props.name);
-  }
+  const floor = null;
+  const bestFloor = floor === null ? '' : floor === 1 ? '1er' : floor + 'e';
 
-  render() {
-
-    const {
-
-      selected,
-      infos,
-      name,
-      freeRooms,
-      totalRooms,
-
-    } = this.props;
-
-    const style = {
-      backgroundImage: `url(${this.props.bgImageUrl})`
-    }
-    const classes = classnames({
-      'BItem-wrapper': true,
-      'expanded': selected === name,
-      'hidden': selected != null && selected !== name
-    })
-
-    const floor = infos
-    const bestFloor = floor === null ? '' : (floor === 1 ? '1er' : floor + 'e')
-
-    return (
-      <div className={classes}>
-        <div
-          className="BItem-card"
-          style={style}
-          onClick={(e) => this.props.selectBuilding(name)}>
-          <div className="overlay"></div>
-          <div className="BItem-dashboard">
-            <div className="BItem-buildingName">{name}</div>
-            <div className="BItem-roomsLeft">
-              <div className="BItem-roomsLeft-counter">
-                <span>{freeRooms}</span>/{totalRooms}
-              </div>
-              <div className="BItem-roomsLeft-text"><Translate t="building.available" /></div>
+  return (
+    <div className={classes}>
+      <div
+        className="BItem-card"
+        style={{
+          backgroundImage: `url(${bgImageUrl})`,
+        }}
+        onClick={e => selectBuilding(name)}
+      >
+        <div className="overlay" />
+        <div className="BItem-dashboard">
+          <div className="BItem-buildingName">{name}</div>
+          <div className="BItem-roomsLeft">
+            <div className="BItem-roomsLeft-counter">
+              <span>{freeRooms}</span>/{totalRooms}
+            </div>
+            <div className="BItem-roomsLeft-text">
+              <Translate t="building.available" />
             </div>
           </div>
         </div>
-        {
-          floor &&
-          <p className="BItem-subinfo secondary-color">
-            Meilleur étage - {bestFloor}
-          </p>
-        }
       </div>
-    )
-  }
+      {floor && (
+        <p className="BItem-subinfo secondary-color">
+          Meilleur étage - {bestFloor}
+        </p>
+      )}
+    </div>
+  );
 }
 
 class BSwitcher extends Component {
-
   state = {
-    selected: null,
-  }
+    selectedBuilding: null,
+  };
 
   componentDidMount() {
     this.props.fetchRoomsInfo('NDC');
     this.props.fetchRoomsInfo('NDL');
   }
 
-  handleSelect = (selected) => {
-    if (this.state.selected === selected) {
-      this.setState({ selected: null });
+  handleSelect = selectedBuilding => {
+    if (this.state.selectedBuilding === selectedBuilding) {
+      this.setState({ selectedBuilding: null });
       return;
     }
-    this.props.fetchRooms(selected);
-    this.setState({ selected });
-  }
-
-
-  // Sépare les salles en 2 catégories: dispo et non dispo
-  selectFreeRooms(rooms) {
-    const now = (new Date()).getTime();
-    const free = [];
-    const notFree = [];
-    if (rooms.length === 0) {
-      return { free, notFree };
-    }
-    rooms.forEach(r => {
-      let isFree = true;
-      r.events.forEach(e => {
-        if (now > e.time.start && now < e.time.end) {
-          isFree = false;
-          notFree.push(r);
-        }
-      })
-      if (isFree) {
-        free.push(r);
-      }
-    })
-    return { free, notFree };
-  }
+    this.props.fetchRooms(selectedBuilding);
+    this.setState({ selectedBuilding });
+  };
 
   getRoomsNbStats(building) {
-    if (this.state.selected === building) {
-      const { free } = this.selectFreeRooms(this.props.rooms);
+    const { stats, rooms } = this.props;
+    if (this.state.selectedBuilding === building) {
+      const { free } = roomService.filterRoomsByAvailability(rooms);
       return { total: this.props.rooms.length, free: free.length };
     }
-    const { stats } = this.props;
     if (stats.hasOwnProperty(building)) {
       const { freeRooms, totalRooms } = stats[building];
       return { free: freeRooms, total: totalRooms };
     }
-    return { free: 0, total: 0 }
-  }
-
-  getBuildingConf() {
-    switch (this.state.selected) {
-      case "NDC":
-        return buildingsConf.NDC;
-      case "NDL":
-        return buildingsConf.NDL;
-    }
+    return { free: 0, total: 0 };
   }
 
   render() {
-
-    const { selected } = this.state;
+    const { selectedBuilding } = this.state;
     const { rooms } = this.props;
 
-    const { free, notFree } = this.selectFreeRooms(rooms);
+    //const { free, notFree } = roomService.filterRoomsByAvailability(rooms);
+    const free = rooms;
     const ndcStats = this.getRoomsNbStats('NDC');
     const ndlStats = this.getRoomsNbStats('NDL');
     return (
@@ -152,41 +111,40 @@ class BSwitcher extends Component {
             bgImageUrl="NDC.jpg"
             totalRooms={ndcStats.total}
             freeRooms={ndcStats.free}
-            selected={selected}
+            selected={selectedBuilding}
             selectBuilding={this.handleSelect}
-            roomInfos={this.props.fetchRoomsInfo}
           />
           <BItem
             name="NDL"
             bgImageUrl="NDL.jpg"
             totalRooms={ndlStats.total}
             freeRooms={ndlStats.free}
-            selected={selected}
+            selected={selectedBuilding}
             selectBuilding={this.handleSelect}
-            roomInfos={this.props.fetchRoomsInfo}
           />
         </div>
         <div className="content">
           <RoomsList
-            selected={selected}
+            selected={selectedBuilding}
             freeRooms={free}
-            notFree={notFree}
+            // notFree={notFree}
           />
-          {
-            selected &&
+          {selectedBuilding && (
             <div className="Map">
-              <BuildingMap config={this.getBuildingConf()} />
+              <BuildingMap
+                config={buildingsConf[this.state.selectedBuilding]}
+              />
             </div>
-          }
+          )}
         </div>
       </div>
-    )
+    );
   }
 }
 
 const mapStateToProps = ({ room }) => ({
   rooms: room.fetchedRooms,
   stats: room.stats,
-})
+});
 
-export default connect(mapStateToProps, actions)(BSwitcher)
+export default connect(mapStateToProps, actions)(BSwitcher);

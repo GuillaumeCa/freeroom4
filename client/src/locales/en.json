@@ -10,7 +10,8 @@
   },
   "room": {
     "free": "Free",
-    "free-for": "Free for"
+    "free-for": "Free for",
+    "not-free": "Not free for"
   },
   "events": {
     "no-events": "No events to come"

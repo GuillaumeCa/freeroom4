@@ -1,9 +1,15 @@
 package app
 
 import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"log"
+	"net/http"
 	"sort"
 	"time"
+
+	"github.com/apognu/gocal"
 )
 
 const (
@@ -38,7 +44,7 @@ func (a *App) getBuildingInfos(id string) (BuildingInfo, error) {
 	return bInfos, err
 }
 
-func (a *App) updateCalendars(conf roomConfObj, b string) {
+func (a *App) updateCalendars(conf roomConfig, b string) {
 	for rid, r := range conf[b] {
 
 		events := getEvents(b, rid, r.URLID)
@@ -69,4 +75,45 @@ func (a *App) updateCalendars(conf roomConfObj, b string) {
 		a.Model.addRoomEvents(rid, eventsToAdd)
 		log.Printf("updating %s done", rid)
 	}
+}
+
+type roomConf struct {
+	Floor int    `json:"floor"`
+	URLID string `json:"urlId"`
+}
+
+type roomConfig map[string]map[string]roomConf
+
+func readRoomConf() roomConfig {
+	c, err := ioutil.ReadFile("conf/rooms.json")
+	if err != nil {
+		log.Fatalf("File rooms.json cannot be read: %v", err)
+	}
+	var conf roomConfig
+	err = json.Unmarshal(c, &conf)
+	if err != nil {
+		log.Fatalf("Error reading room conf: %v", err)
+	}
+	return conf
+}
+
+func getRoomFloor(building, id string) int {
+	conf := readRoomConf()
+	return conf[building][id].Floor
+}
+
+func getEvents(building, roomID, urlID string) []gocal.Event {
+	url := fmt.Sprintf(
+		"http://planning.isep.fr/Telechargements/ical/EdT_%s.ics?version=13.0.2.1&idICal=%s&param=643d5b312e2e36325d2666683d3126663d31",
+		roomID, urlID,
+	)
+	res, err := http.Get(url)
+	if err != nil {
+		log.Printf("Cannot get calendar for room %s in building %s: %v", roomID, building, err)
+	}
+	defer res.Body.Close()
+
+	c := gocal.NewParser(res.Body)
+	c.Parse()
+	return c.Events
 }

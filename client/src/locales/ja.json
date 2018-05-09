@@ -9,8 +9,9 @@
     "available": "利用可能"
   },
   "room": {
-    "free": "自由な",
-    "free-for": "無料で"
+    "free": "利用できます",
+    "free-for": "以下のために利用可能",
+    "not-free": "利用できません"
   },
   "events": {
     "no-events": "来るべきイベントはない"

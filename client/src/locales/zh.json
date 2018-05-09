@@ -9,8 +9,9 @@
     "available": "可得到"
   },
   "room": {
-    "free": "自由",
-    "free-for": "免费"
+    "free": "可得到",
+    "free-for": "可以用来",
+    "not-free": "不适用于"
   },
   "events": {
     "no-events": "没有事件来"

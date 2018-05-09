@@ -9,8 +9,9 @@
     "available": "Disponible"
   },
   "room": {
-    "free": "Libre",
-    "free-for": "Libre para"
+    "free": "Disponible",
+    "free-for": "Disponible para",
+    "not-free": "No está disponible para"
   },
   "events": {
     "no-events": "No hay eventos por venir"

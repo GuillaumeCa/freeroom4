@@ -82,6 +82,7 @@ class TimeMachine extends Component<Props, State> {
                   :
                 </span>
                 <input
+                  className="highlight TimeMachine-input"
                   type="number"
                   step="5"
                   value={this.formatMinute(date.getMinutes())}

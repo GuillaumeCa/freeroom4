@@ -13,8 +13,6 @@ import * as roomService from '../../../services/rooms';
 
 export default class Room extends Component {
   state = {
-    status: FREE,
-    currentEvent: null,
     showEvents: false,
   };
 
@@ -23,31 +21,13 @@ export default class Room extends Component {
     events: array.isRequired,
   };
 
-  componentDidMount() {
-    // Scheduling update of currentEvent
-    this.updateStatus();
-    this.updateScheduler = setInterval(() => {
-      this.updateStatus();
-    }, 1000 * 1);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.updateScheduler);
-  }
-
-  updateStatus() {
-    const { events } = this.props;
-    const now = new Date();
-    const { status, currentEvent } = roomService.roomStatus(now, events);
-    this.setState({ status, currentEvent });
-  }
-
   toggleEvents = () => {
     this.setState({ showEvents: !this.state.showEvents });
   };
 
   renderStatus() {
-    const { status, currentEvent } = this.state;
+    const { now } = this.props;
+    const { status, currentEvent } = this.props.status;
     switch (status) {
       case FREE:
         return (
@@ -59,25 +39,25 @@ export default class Room extends Component {
         return (
           <span key={status}>
             <Translate t="room.free-for" />{' '}
-            <RoomTime time={currentEvent.time.start} />
+            <RoomTime now={now} time={currentEvent.time.start} />
           </span>
         );
       case NOT_FREE:
         return (
           <span key={status}>
             <Translate t="room.not-free" />{' '}
-            <RoomTime time={currentEvent.time.end} />
+            <RoomTime now={now} time={currentEvent.time.end} />
           </span>
         );
     }
   }
 
   render() {
-    const { roomID, events, available } = this.props;
-    const { currentEvent, showEvents, status } = this.state;
+    const { roomID, events, status } = this.props;
+    const { showEvents } = this.state;
     const renderedStatus = this.renderStatus();
     const backgroundColorRoom =
-      status === NOT_FREE ? 'bg-secondary' : 'bg-primary';
+      status.status === NOT_FREE ? 'bg-secondary' : 'bg-primary';
     return (
       <div>
         <div
@@ -87,7 +67,7 @@ export default class Room extends Component {
           <h2 className="Room-id">{roomID}</h2>
           <div className="Room-status">{renderedStatus}</div>
         </div>
-        {showEvents && <RoomEvents currentEvent={!available} events={events} />}
+        {showEvents && <RoomEvents status={status.status} events={events} />}
       </div>
     );
   }

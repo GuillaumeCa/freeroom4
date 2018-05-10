@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 
-export default function RoomTime({ time }) {
-  const now = new Date();
+export default function RoomTime({ now, time }) {
   const diff = time - now.getTime();
   let timeF = moment(diff)
     .add(1, 'm')

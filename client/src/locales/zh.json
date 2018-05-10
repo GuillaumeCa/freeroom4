@@ -15,5 +15,10 @@
   },
   "events": {
     "no-events": "没有事件来"
+  },
+  "timemachine": {
+    "now": "现在",
+    "cancel": "取消",
+    "edit": "编辑"
   }
 }

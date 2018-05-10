@@ -15,5 +15,10 @@
   },
   "events": {
     "no-events": "Pas d'évènements à venir"
+  },
+  "timemachine": {
+    "now": "MAINTENANT",
+    "cancel": "annuler",
+    "edit": "modifier"
   }
 }

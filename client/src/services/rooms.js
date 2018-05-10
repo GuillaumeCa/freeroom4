@@ -1,6 +1,11 @@
 // @flow
+import axios from 'axios';
+import { API_URL, FREE, FREE_FOR, NOT_FREE } from '../config';
 
-import { FREE, FREE_FOR, NOT_FREE } from '../config';
+export async function getBuildingRoomsEvents(building) {
+  const response = await axios.get(`${API_URL}/building/${building}`);
+  return response.data.rooms;
+}
 
 // Sépare les salles en 2 catégories: dispo et non dispo
 export function filterRoomsByAvailability(rooms) {
@@ -30,8 +35,8 @@ export function buildFloors(rooms) {
   const floors = {};
   const floorsList = [];
   rooms.forEach(r => {
-    if (floors[r.floor] == null) floors[r.floor] = [];
-    floors[r.floor].push(r);
+    if (floors[r.room.floor] == null) floors[r.room.floor] = [];
+    floors[r.room.floor].push(r);
   });
   Object.keys(floors).forEach(k => {
     floorsList.push({

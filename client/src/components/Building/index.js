@@ -5,24 +5,16 @@ import Translate from '../Translate';
 
 import RoomsList from '../RoomsList';
 
-import { connect } from 'react-redux';
-import * as actions from '../../state/roomAction';
-
 import BuildingMap from '../Map';
 import { buildingsConf } from '../../map.conf';
+
+import TimeMachine from '../TimeMachine';
 
 import * as roomService from '../../services/rooms';
 
 import './Building.css';
 
-function BItem({
-  selected,
-  bgImageUrl,
-  name,
-  freeRooms,
-  totalRooms,
-  selectBuilding,
-}) {
+function BItem({ selected, bgImageUrl, name, getRoomStats, selectBuilding }) {
   const classes = classnames({
     'BItem-wrapper': true,
     expanded: selected === name,
@@ -31,7 +23,7 @@ function BItem({
 
   const floor = null;
   const bestFloor = floor === null ? '' : floor === 1 ? '1er' : floor + 'e';
-
+  const { free, total } = getRoomStats(name);
   return (
     <div className={classes}>
       <div
@@ -46,7 +38,7 @@ function BItem({
           <div className="BItem-buildingName">{name}</div>
           <div className="BItem-roomsLeft">
             <div className="BItem-roomsLeft-counter">
-              <span>{freeRooms}</span>/{totalRooms}
+              <span>{free}</span>/{total}
             </div>
             <div className="BItem-roomsLeft-text">
               <Translate t="building.available" />
@@ -63,75 +55,160 @@ function BItem({
   );
 }
 
-class BSwitcher extends Component {
+type State = {
+  selectedBuilding: ?('NDC' | 'NDL'),
+  loading: boolean,
+  roomsNDC: any[],
+  roomsNDL: any[],
+  currentDate: ?Date,
+};
+
+class BSwitcher extends Component<{}, State> {
   state = {
     selectedBuilding: null,
+    loading: false,
+    currentDate: null,
+    roomsNDC: [],
+    roomsNDL: [],
   };
 
   componentDidMount() {
-    this.props.fetchRoomsInfo('NDC');
-    this.props.fetchRoomsInfo('NDL');
+    this.fetchRooms();
   }
 
-  handleSelect = selectedBuilding => {
-    if (this.state.selectedBuilding === selectedBuilding) {
+  async fetchRooms() {
+    this.setState({ loading: true });
+    let roomsNDC = await roomService.getBuildingRoomsEvents('NDC');
+    let roomsNDL = await roomService.getBuildingRoomsEvents('NDL');
+    roomsNDC = roomsNDC.map(r => ({
+      room: r,
+      currentStatus: { status: 'FREE', currentEvent: null },
+    }));
+    roomsNDL = roomsNDL.map(r => ({
+      room: r,
+      currentStatus: { status: 'FREE', currentEvent: null },
+    }));
+    this.setState({ roomsNDC, roomsNDL, loading: false });
+  }
+
+  // Scheduling update of currentEvent
+  setupStatusUpdate() {
+    const rooms = this.getSelectedBuildingRooms(this.state.selectedBuilding);
+    this.updateStatus(rooms);
+    this.updateScheduler = setInterval(() => {
+      const rooms = this.getSelectedBuildingRooms(this.state.selectedBuilding);
+      this.updateStatus(rooms);
+    }, 1000 * 1);
+  }
+
+  componentWillUnmount() {
+    this.clearUpdate();
+  }
+
+  clearUpdate() {
+    clearInterval(this.updateScheduler);
+  }
+
+  updateStatus(rooms) {
+    // const now = new Date(2018, 4, 11, 10, 10, 0);
+    const now = this.getCurrentDate();
+    const statuses = rooms.map(r => {
+      const { status, currentEvent } = roomService.roomStatus(
+        now,
+        r.room.events
+      );
+      r.currentStatus = {
+        status,
+        currentEvent,
+      };
+      return r;
+    });
+
+    const { selectedBuilding } = this.state;
+    if (selectedBuilding === 'NDC') {
+      this.setState({ roomsNDC: statuses });
+    } else if (selectedBuilding === 'NDL') {
+      this.setState({ roomsNDL: statuses });
+    }
+  }
+
+  handleSelect = selected => {
+    if (this.state.selectedBuilding === selected) {
       this.setState({ selectedBuilding: null });
+      this.clearUpdate();
       return;
     }
-    this.props.fetchRooms(selectedBuilding);
-    this.setState({ selectedBuilding });
+    this.setState({ selectedBuilding: selected });
+    this.setupStatusUpdate();
   };
 
-  getRoomsNbStats(building) {
-    const { stats, rooms } = this.props;
-    if (this.state.selectedBuilding === building) {
-      const { free } = roomService.filterRoomsByAvailability(rooms);
-      return { total: this.props.rooms.length, free: free.length };
+  getRoomsNbStats = building => {
+    const rooms = this.getSelectedBuildingRooms(building);
+    const { free } = roomService.filterRoomsByAvailability(
+      rooms.map(r => r.room)
+    );
+    return { total: rooms.length, free: free.length };
+  };
+
+  getSelectedBuildingRooms(building) {
+    if (building) {
+      switch (building) {
+        case 'NDC':
+          return this.state.roomsNDC;
+        case 'NDL':
+          return this.state.roomsNDL;
+        default:
+          break;
+      }
     }
-    if (stats.hasOwnProperty(building)) {
-      const { freeRooms, totalRooms } = stats[building];
-      return { free: freeRooms, total: totalRooms };
-    }
-    return { free: 0, total: 0 };
+    return [];
+  }
+
+  getCurrentDate() {
+    return this.state.currentDate || new Date();
+  }
+
+  isMobile() {
+    return typeof window.orientation !== 'undefined';
   }
 
   render() {
-    const { selectedBuilding } = this.state;
-    const { rooms } = this.props;
-
-    //const { free, notFree } = roomService.filterRoomsByAvailability(rooms);
-    const free = rooms;
-    const ndcStats = this.getRoomsNbStats('NDC');
-    const ndlStats = this.getRoomsNbStats('NDL');
+    const { selectedBuilding, currentDate } = this.state;
+    const rooms = this.getSelectedBuildingRooms(selectedBuilding);
     return (
-      <div>
+      <div className="BSwitcher-wrapper">
+        {!this.isMobile() && (
+          <TimeMachine
+            now={currentDate}
+            setDate={currentDate => this.setState({ currentDate })}
+          />
+        )}
         <div className="BSwitcher-switch">
           <BItem
             name="NDC"
             bgImageUrl="NDC.jpg"
-            totalRooms={ndcStats.total}
-            freeRooms={ndcStats.free}
             selected={selectedBuilding}
+            getRoomStats={this.getRoomsNbStats}
             selectBuilding={this.handleSelect}
           />
           <BItem
             name="NDL"
             bgImageUrl="NDL.jpg"
-            totalRooms={ndlStats.total}
-            freeRooms={ndlStats.free}
             selected={selectedBuilding}
+            getRoomStats={this.getRoomsNbStats}
             selectBuilding={this.handleSelect}
           />
         </div>
         <div className="content">
           <RoomsList
             selected={selectedBuilding}
-            freeRooms={free}
-            // notFree={notFree}
+            rooms={rooms}
+            now={this.getCurrentDate()}
           />
           {selectedBuilding && (
             <div className="Map">
               <BuildingMap
+                rooms={rooms}
                 config={buildingsConf[this.state.selectedBuilding]}
               />
             </div>
@@ -142,9 +219,4 @@ class BSwitcher extends Component {
   }
 }
 
-const mapStateToProps = ({ room }) => ({
-  rooms: room.fetchedRooms,
-  stats: room.stats,
-});
-
-export default connect(mapStateToProps, actions)(BSwitcher);
+export default BSwitcher;

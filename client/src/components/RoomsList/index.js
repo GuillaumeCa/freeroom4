@@ -14,10 +14,15 @@ class RoomsList extends Component {
   renderFloor = (item, index) => {
     return (
       <Floor key={index} floor={item.floor}>
-        {item.rooms.map((room, index) => {
+        {item.rooms.map((r, index) => {
           return (
             <div key={index}>
-              <Room roomID={room.id} events={room.events} />
+              <Room
+                now={this.props.now}
+                status={r.currentStatus}
+                roomID={r.room.id}
+                events={r.room.events}
+              />
             </div>
           );
         })}
@@ -26,14 +31,14 @@ class RoomsList extends Component {
   };
 
   render() {
-    const { freeRooms, notFree } = this.props;
-    const freeFloors = roomService.buildFloors(freeRooms);
+    const { rooms } = this.props;
+    const roomsFloor = roomService.buildFloors(rooms);
     // const notFreeFloors = roomService.buildFloors(notFree);
     if (this.props.selected) {
       return (
         <div className="RoomsList">
           {/* <Button label="Afficher indisponible" /> */}
-          {freeFloors.map(this.renderFloor)}
+          {roomsFloor.map(this.renderFloor)}
         </div>
       );
     }

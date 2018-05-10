@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { array } from 'prop-types';
+import { array, bool } from 'prop-types';
 
 import LargeBtn from '../../Button/Large';
 import Translate from '../../Translate';
 
 import RightArrow from '../../Svg/RightArrow';
 import LeftArrow from '../../Svg/LeftArrow';
+
+import { NOT_FREE } from '../../../config';
 
 export default class RoomEvents extends Component {
   state = {
@@ -16,22 +18,21 @@ export default class RoomEvents extends Component {
 
   static PropTypes = {
     events: array.isRequired,
+    currentEvent: bool.isRequired,
   };
 
   componentDidMount() {
-    const displayedEvents = this.getDisplayedEvents(this.props.events);
+    const { events, currentEvent } = this.props;
+    const displayedEvents = this.getDisplayedEvents(events, currentEvent);
     this.setState({ displayedEvents });
   }
 
-  getDisplayedEvents(events) {
+  getDisplayedEvents(events, status) {
     const now = new Date();
     return events
-      .filter(e => {
-        if (this.props.currentEvent) {
-          return e.time.end > now.getTime();
-        }
-        return e.time.start > now.getTime();
-      })
+      .filter(
+        e => (status === NOT_FREE ? e.time.end : e.time.start) > now.getTime()
+      )
       .sort((a, b) => (a.time.start > b.time.start ? 1 : -1));
   }
 
@@ -56,7 +57,7 @@ export default class RoomEvents extends Component {
 
   renderEvent(event) {
     const { name, desc, location, time } = event;
-    const paragraphs = desc.split('\\n');
+    const paragraphs = desc.split('\\n').filter(p => p.length > 0);
     return (
       <div className="event-info">
         <h3 className="event-title primary-color">{name}</h3>

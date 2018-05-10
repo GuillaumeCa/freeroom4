@@ -15,5 +15,10 @@
   },
   "events": {
     "no-events": "来るべきイベントはない"
+  },
+  "timemachine": {
+    "now": "今",
+    "cancel": "キャンセル",
+    "edit": "編集します"
   }
 }

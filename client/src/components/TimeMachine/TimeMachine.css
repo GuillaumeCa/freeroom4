@@ -1,0 +1,41 @@
+.TimeMachine-wrapper {
+  margin-bottom: 10px;
+}
+
+.TimeMachine-label {
+  font-size: 1.3em;
+  margin-right: 10px;
+}
+
+.TimeMachine-no-margin {
+  margin-right: 0;
+}
+
+.TimeMachine-input {
+  font-size: 1.3em;
+  border: none;
+  outline: none;
+  width: 30px;
+  appearance: none;
+}
+
+.TimeMachine-input::-webkit-inner-spin-button,
+.TimeMachine-input::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+.TimeMachine-btn {
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.TimeMachine-btn:hover {
+  opacity: 1;
+}
+
+.TimeMachine-dateinput {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}

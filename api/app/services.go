@@ -114,6 +114,10 @@ func getEvents(building, roomID, urlID string) []gocal.Event {
 	defer res.Body.Close()
 
 	c := gocal.NewParser(res.Body)
-	c.Parse()
+	err = c.Parse()
+	if err != nil {
+		log.Printf("Cannot parse calendar: %v", err)
+	}
+
 	return c.Events
 }

@@ -33,13 +33,9 @@ class RoomsList extends Component {
   render() {
     const { rooms } = this.props;
     const roomsFloor = roomService.buildFloors(rooms);
-    // const notFreeFloors = roomService.buildFloors(notFree);
     if (this.props.selected) {
       return (
-        <div className="RoomsList">
-          {/* <Button label="Afficher indisponible" /> */}
-          {roomsFloor.map(this.renderFloor)}
-        </div>
+        <div className="RoomsList">{roomsFloor.map(this.renderFloor)}</div>
       );
     }
     return null;

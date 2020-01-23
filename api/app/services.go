@@ -97,8 +97,8 @@ func getEvents(building, roomID, urlID string) ([]gocal.Event, error) {
 		"http://planning.isep.fr/Telechargements/ical/EdT_%s.ics?version=13.0.2.1&idICal=%s&param=643d5b312e2e36325d2666683d3126663d31",
 		roomID, urlID,
 	)
-
-	res, err := http.Get(url)
+	client := &http.Client{Timeout: 30 * time.Second}
+	res, err := client.Get(url)
 	if err != nil {
 		return nil, fmt.Errorf(
 			"Cannot get calendar for room %s in building %s: %v",

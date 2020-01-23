@@ -21,9 +21,3 @@ func (a *App) getBuildingInfosHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	resOK(w, res)
 }
-
-func (a *App) testGetCalHandler(w http.ResponseWriter, r *http.Request) {
-	c := readRoomConf()
-	a.updateCalendars(c, buildNDC)
-	a.updateCalendars(c, buildNDL)
-}

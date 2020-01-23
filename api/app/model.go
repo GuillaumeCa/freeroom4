@@ -45,10 +45,10 @@ type BuildingInfo struct {
 // Model -
 type Model interface {
 	insertRoom(id, building string) error
-	addRoomEvents(id string, events []Event)
+	addRoomEvents(id string, events []Event) error
 	getBuilding(id string) (Building, error)
 	getRooms(building string) ([]Room, error)
-	floorFromRoom(id, building string) int
+	floorFromRoom(id, building string) (int, error)
 }
 
 // MongoModel -
@@ -63,7 +63,11 @@ func NewMongoModel(db *mgo.Database) Model {
 
 func (model MongoModel) insertRoom(id, building string) error {
 	c := model.DB.C("rooms")
-	floor := model.floorFromRoom(id, building)
+	floor, err := model.floorFromRoom(id, building)
+	if err != nil {
+		return err
+	}
+
 	r := &Room{
 		ID:       id,
 		Building: building,
@@ -71,13 +75,13 @@ func (model MongoModel) insertRoom(id, building string) error {
 		Events:   []Event{},
 	}
 	s := bson.M{"id": id}
-	_, err := c.Upsert(s, r)
+	_, err = c.Upsert(s, r)
 	return err
 }
 
-func (model MongoModel) addRoomEvents(id string, events []Event) {
+func (model MongoModel) addRoomEvents(id string, events []Event) error {
 	c := model.DB.C("rooms")
-	c.Upsert(
+	_, err := c.Upsert(
 		bson.M{"id": id},
 		bson.M{
 			"$push": bson.M{
@@ -87,6 +91,7 @@ func (model MongoModel) addRoomEvents(id string, events []Event) {
 			},
 		},
 	)
+	return err
 }
 
 func (model MongoModel) getBuilding(id string) (Building, error) {
@@ -103,7 +108,10 @@ func (model MongoModel) getRooms(building string) ([]Room, error) {
 	return rooms, err
 }
 
-func (model MongoModel) floorFromRoom(id, building string) int {
-	conf := readRoomConf()
-	return conf[building][id].Floor
+func (model MongoModel) floorFromRoom(id, building string) (int, error) {
+	conf, err := readRoomConf()
+	if err != nil {
+		return 0, err
+	}
+	return conf[building][id].Floor, nil
 }

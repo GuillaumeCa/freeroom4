@@ -13,16 +13,16 @@ func (model testModel) insertRoom(id, building string) error {
 	return nil
 }
 
-func (model testModel) addRoomEvents(id string, events []Event) {
-
+func (model testModel) addRoomEvents(id string, events []Event) error {
+	return nil
 }
 
 func (model testModel) getBuilding(id string) (Building, error) {
 	return Building{}, nil
 }
 
-func (model testModel) floorFromRoom(id, building string) int {
-	return 0
+func (model testModel) floorFromRoom(id, building string) (int, error) {
+	return 0, nil
 }
 
 func (model testModel) getRooms(building string) ([]Room, error) {

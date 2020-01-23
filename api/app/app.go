@@ -32,7 +32,10 @@ func (a *App) Initialize(hostdb, dbname string, dlOnStart bool) {
 	a.Model = NewMongoModel(session.DB(dbname))
 
 	if dlOnStart {
-		conf := readRoomConf()
+		conf, err := readRoomConf()
+		if err != nil {
+			log.Fatalf("Could not read room config: %v", err)
+		}
 		a.updateCalendars(conf, buildNDC)
 		a.updateCalendars(conf, buildNDL)
 	}
@@ -64,13 +67,16 @@ func (a *App) initializeRoutes() {
 	r := a.Router
 	r.HandleFunc("/building/{name:(?:NDC|NDL)}", a.getBuildingHandler).Methods("GET")
 	r.HandleFunc("/building/{name:(?:NDC|NDL)}/infos", a.getBuildingInfosHandler).Methods("GET")
-	r.HandleFunc("/update/cal", a.testGetCalHandler).Methods("GET")
 }
 
 func (a *App) initializeCronCalendar() {
 	c := cron.New()
 	c.AddFunc("17 1 * * *", func() {
-		c := readRoomConf()
+		c, err := readRoomConf()
+		if err != nil {
+			log.Printf("Could not read room config: %v", err)
+			return
+		}
 		a.updateCalendars(c, buildNDC)
 		a.updateCalendars(c, buildNDL)
 	})

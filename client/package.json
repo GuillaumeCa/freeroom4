@@ -21,9 +21,10 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "sh -ac '. .env.${REACT_APP_ENV}; react-scripts build'",
-    "build:docker": "REACT_APP_ENV=docker npm run build",
-    "build:pi": "REACT_APP_ENV=pi npm run build",
+    "build": "react-scripts build",
+    "build:env": "sh -ac '. .env.${REACT_APP_ENV}; react-scripts build'",
+    "build:docker": "REACT_APP_ENV=docker npm run build:env",
+    "build:pi": "REACT_APP_ENV=pi npm run build:env",
     "test": "react-scripts test",
     "test:coverage": "react-scripts test --coverage",
     "eject": "react-scripts eject"

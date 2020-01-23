@@ -1,4 +1,4 @@
-VERSION ?= 0.0.2-beta
+VERSION ?= 0.0.3-beta
 
 backrpi:
 	cd api && GOOS=linux GOARCH=arm GOARM=7 go build -o build/api_$(VERSION)
